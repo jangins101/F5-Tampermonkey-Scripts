@@ -136,6 +136,11 @@
         1 = Yes
     **************************************************************/
     ChooseNodeAsDefault = "0";
+
+    /*************************************************************
+        Set this script to debug mode, where things will be logged to the console
+    **************************************************************/
+    IsDebug = 1;
     
 /***************************************************************************************
                         End Config section
@@ -144,7 +149,10 @@
     //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
     this.$ = this.jQuery = jQuery.noConflict(true);
 
-    //console.log(window.location);
+    // Functions 
+    function dlog(o) { 
+        if (IsDebug) { console.log(o); } 
+    }
 
     function checkLocation(str) {
         return (window.location.href.indexOf(str) >= 0);
@@ -162,7 +170,12 @@
     }
 
 
+    // This will add the css styles we use to style the links we create.
+    $("<style type='text/css'> .tmLink {text-decoration:none;padding:1px 20px 1px 1px;background: rgba(150,150,0,.25) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%;border:solid 1px rgba(150,150,0,.5);} .tmLink:hover {text-decoration:none !important; background-color: rgba(150,150,0,.35)}</style>").appendTo("head");
 
+
+    // Sometimes it's good to know for debugging
+    dlog("Location: " + window.location.href);
    
 
     if($('textarea#rule_definition').length){
@@ -381,11 +394,7 @@
             }
         }
 
-var _isdebug = 1;
-function dlog(o) { if (_isdebug) { console.log(o); } }
 
-    $("<style type='text/css'> .tmLink {text-decoration:none;padding:1px 20px 1px 1px;background: rgba(150,150,0,.25) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%;border:solid 1px rgba(150,150,0,.5);} .tmLink:hover {text-decoration:none !important; background-color: rgba(150,150,0,.35)}</style>").appendTo("head");
-    dlog("Location: " + window.location.href);
 
     // **********************************************
     // ***** VIRTUAL SERVERS ************************
@@ -445,8 +454,9 @@ function dlog(o) { if (_isdebug) { console.log(o); } }
         }
     }
     
+    // iRule & Policy selection pages
     if (checkLocation("/tmui/Control/form?__handler=/tmui/locallb/virtual_server/resources")) {
-        dlog("Virtual Servers | Resources | iRule Selection");
+        dlog("Virtual Servers | Resources | iRule & Policy Selection");
         
         // Assigned iRules
         //   Make the width of the iRules selection page the same for both list boxes.
@@ -463,6 +473,23 @@ function dlog(o) { if (_isdebug) { console.log(o); } }
             // Add dblclick ability to add/remove iRules
             $("#assigned_rules").dblclick(function() {  $("#rule_references_button").click(); });
             $("#rule_references").dblclick(function() { $("#assigned_rules_button").click(); });
+        }
+        
+        // Policy select boxes
+        //   Make the width of the iRules selection page the same for both list boxes.
+        if ($("#assigned_l7policies").length && $("#l7policy_references").length) {
+            //Change the iRule selection choice
+            assignedrules = $("#assigned_l7policies").attr('size', iRulesCount);
+            rulereferences = $("#l7policy_references").attr('size', iRulesCount);
+
+            // Sync widths of the select boxes
+            var maxW = Math.max($("#assigned_l7policies").width(), $("#l7policy_references").width());
+            $("#assigned_l7policies").width(maxW);
+            $("#l7policy_references").width(maxW);
+
+            // Add dblclick ability to add/remove iRules
+            $("#assigned_l7policies").dblclick(function() {  $("#l7policy_references_button").click(); });
+            $("#l7policy_references").dblclick(function() { $("#assigned_l7policies_button").click(); });
         }
     }
 

@@ -10,278 +10,280 @@
 // ==/UserScript==
  
 /***************************************************************************************
-	
+    
     This script is meant to enhance the GUI of the LTM in a non intefering way     
     
     Version history:
-	
-	Version		Change
-	0.1			Original version
-	0.2			Make sure that the script is not executed when not needed
-	0.3			Adding noConflict to avoid problems with F5's javascripts
+    
+    Version     Change
+    0.1         Original version
+    0.2         Make sure that the script is not executed when not needed
+    0.3         Adding noConflict to avoid problems with F5's javascripts
     0.4         Adding iRule links in the virtual server resources tab
-	0.5			Adding default settings when creating pools and monitors
+    0.5         Adding default settings when creating pools and monitors
 */
  
 /***************************************************************************************
-						Begin Config section
+                        Begin Config section
 ****************************************************************************************/
  
-	
-	/**************************************************************
-		How many rows do you want the iRule definition textarea to show
-		
-		Default:
-		iRuleDefinitionRows = 35;
-	***************************************************************/
-	iRuleDefinitionRows = 35;
-	
-	
-	/**************************************************************
-		How many rules you want to see in the rule assignment window
-		
-		Default:
-		iRulesCount = 40;
-	***************************************************************/
-	iRulesCount = 40;
-	
-	/**************************************************************
-		How many monitors you want to show in the monitor selection
-		
-		Default:
-		MonitorCount = 30;
-	***************************************************************/
-	MonitorCount = 30;
+    
+    /**************************************************************
+        How many rows do you want the iRule definition textarea to show
+        
+        Default:
+        iRuleDefinitionRows = 35;
+    ***************************************************************/
+    iRuleDefinitionRows = 35;
+    
+    
+    /**************************************************************
+        How many rules you want to see in the rule assignment window
+        
+        Default:
+        iRulesCount = 40;
+    ***************************************************************/
+    iRulesCount = 40;
+    
+    /**************************************************************
+        How many monitors you want to show in the monitor selection
+        
+        Default:
+        MonitorCount = 30;
+    ***************************************************************/
+    MonitorCount = 30;
  
-	/**************************************************************
-		How many data group list entries to show
-		
-		Default:
-		DatagroupListCount = 30;
-	***************************************************************/
-	DatagroupListCount = 30;
-	
-	/**************************************************************
-		Set this to 1 if you want to catch tabs when writing iRulesCount
-		
-		Default:
-		CatchTab = 1;
-	***************************************************************/
-	CatchTab = 1;
-	
-	/**************************************************************
-		Set http monitor name default suffix
-		
-		Default: 
-		HttpMonitorSuffix = "";
-	***************************************************************/
-	HttpMonitorSuffix = "";
-	
-	/**************************************************************
-		Set the default pool name
-		
-		Default:
-		DefaultPoolName = "";
-	***************************************************************/
-	DefaultPoolName = "";
-	
-	/**************************************************************
-		Set the default action on pool down
-		
-		Default:
-		DefaultActionOnPoolDown = 0;
-		
-		Options:
-		0 = None
-		1 = rejected
-		2 = drop
-	***************************************************************/
-	DefaultActionOnPoolDown = 0;
-	
-	/**************************************************************
-		Set the default action on pool down when creating pools
-		Default = 0;
-		
-		Options:
-		0 = Round Robin
-		1 = Ratio (member)
-		2 = Least Connections (member)
-		3 = Observed (member)
-		4 = Predictive (member)
-		5 = Ratio (node)
-		6 = Least connections (node)
-		7 = Fastest (node)
-		8 = Observed (node)
-		9 = Predictive (node)
-		10 = Dynamic Ratio (node)
-		11 = Fastest (application)
-		12 = Least sessions
-		13 = Dynamic ratio (member)
-		14 = Weighted Least Connections (member)
-		15 = Weighted Least Connections (node)
-		16 = Ratio (session)
-		17 = Ratio Least connections (member)
-		18 = Ratio Least connections (node)
-	**************************************************************/
-	DefaultLBMethod = 0;
-	
-	/**************************************************************	
-		Choose Node List as default when creating pools 
-		
-		Default:
-		ChooseNodeAsDefault = 0;
-		
-		Options:
-		0 = No
-		1 = Yes
-	**************************************************************/
-	ChooseNodeAsDefault = "0";
-	
+    /**************************************************************
+        How many data group list entries to show
+        
+        Default:
+        DatagroupListCount = 30;
+    ***************************************************************/
+    DatagroupListCount = 30;
+    
+    /**************************************************************
+        Set this to 1 if you want to catch tabs when writing iRulesCount
+        
+        Default:
+        CatchTab = 1;
+    ***************************************************************/
+    CatchTab = 1;
+    
+    /**************************************************************
+        Set http monitor name default suffix
+        
+        Default: 
+        HttpMonitorSuffix = "";
+    ***************************************************************/
+    HttpMonitorSuffix = "";
+    
+    /**************************************************************
+        Set the default pool name
+        
+        Default:
+        DefaultPoolName = "";
+    ***************************************************************/
+    DefaultPoolName = "";
+    
+    /**************************************************************
+        Set the default action on pool down
+        
+        Default:
+        DefaultActionOnPoolDown = 0;
+        
+        Options:
+        0 = None
+        1 = rejected
+        2 = drop
+    ***************************************************************/
+    DefaultActionOnPoolDown = 0;
+    
+    /**************************************************************
+        Set the default action on pool down when creating pools
+        Default = 0;
+        
+        Options:
+        0 = Round Robin
+        1 = Ratio (member)
+        2 = Least Connections (member)
+        3 = Observed (member)
+        4 = Predictive (member)
+        5 = Ratio (node)
+        6 = Least connections (node)
+        7 = Fastest (node)
+        8 = Observed (node)
+        9 = Predictive (node)
+        10 = Dynamic Ratio (node)
+        11 = Fastest (application)
+        12 = Least sessions
+        13 = Dynamic ratio (member)
+        14 = Weighted Least Connections (member)
+        15 = Weighted Least Connections (node)
+        16 = Ratio (session)
+        17 = Ratio Least connections (member)
+        18 = Ratio Least connections (node)
+    **************************************************************/
+    DefaultLBMethod = 0;
+    
+    /**************************************************************    
+        Choose Node List as default when creating pools 
+        
+        Default:
+        ChooseNodeAsDefault = 0;
+        
+        Options:
+        0 = No
+        1 = Yes
+    **************************************************************/
+    ChooseNodeAsDefault = "0";
+    
 /***************************************************************************************
-						End Config section
+                        End Config section
 ****************************************************************************************/
-	
-	//Make sure that the tampermonkey jQuery does not tamper with F5's scripts
-	this.$ = this.jQuery = jQuery.noConflict(true);
+    
+    //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
+    this.$ = this.jQuery = jQuery.noConflict(true);
 
-	//console.log(window.location);
-	
-	function checkLocation(str) {
-		return (window.location.href.indexOf(str) >= 0);
-	}
-	
-	function endsWith(str, suffix) {
-		return str.indexOf(suffix, str.length - suffix.length) !== -1;
-	}
-	
-	function getParameterByName(name) {
-		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-	    	results = regex.exec(location.search);
-		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-	}
-	
-	
+    //console.log(window.location);
 
-	if($('textarea#rule_definition').length){
-		//Change the iRule definition row count
-		$('textarea#rule_definition').attr('rows', iRuleDefinitionRows);
-		
-		//Catch tabs in the text areas
-		if(CatchTab == 1){
-			$("textarea").keydown(function(e) {
-				if(e.keyCode === 9) { // tab was pressed
-					// get caret position/selection
-					var start = this.selectionStart;
-					var end = this.selectionEnd;
+    function checkLocation(str) {
+        return (window.location.href.indexOf(str) >= 0);
+    }
+
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
+    
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+
+
+   
+
+    if($('textarea#rule_definition').length){
+        //Change the iRule definition row count
+        $('textarea#rule_definition').attr('rows', iRuleDefinitionRows);
+        
+        //Catch tabs in the text areas
+        if(CatchTab == 1){
+            $("textarea").keydown(function(e) {
+                if(e.keyCode === 9) { // tab was pressed
+                    // get caret position/selection
+                    var start = this.selectionStart;
+                    var end = this.selectionEnd;
  
-					var $this = $(this);
-					var value = $this.val();
+                    var $this = $(this);
+                    var value = $this.val();
  
-					// set textarea value to: text before caret + tab + text after caret
-					$this.val(value.substring(0, start) + "\t" + value.substring(end));
+                    // set textarea value to: text before caret + tab + text after caret
+                    $this.val(value.substring(0, start) + "\t" + value.substring(end));
  
-					// put caret at right position again (add one for the tab)
-					this.selectionStart = this.selectionEnd = start + 1;
+                    // put caret at right position again (add one for the tab)
+                    this.selectionStart = this.selectionEnd = start + 1;
  
-					// prevent the focus lose
-					e.preventDefault();
-				}
-			});
-		}
-	}
+                    // prevent the focus lose
+                    e.preventDefault();
+                }
+            });
+        }
+    }
 
     
         
         
     // ASSIGNED iRULES for MONITORS
-	if($("#monitor_rule").length && $("#available_monitor_select").length){
-		//Change the monitor count
-		$("#monitor_rule").attr('size', MonitorCount);
-		$("#available_monitor_select").attr('size', MonitorCount);
+    if($("#monitor_rule").length && $("#available_monitor_select").length){
+        //Change the monitor count
+        $("#monitor_rule").attr('size', MonitorCount);
+        $("#available_monitor_select").attr('size', MonitorCount);
                 
         // Add dblclick ability to add/remove iRules
         $("#monitor_rule").dblclick(function() {  $("#available_monitor_select_button").click(); });
         $("#available_monitor_select").dblclick(function() { $("#monitor_rule_button").click(); });
-	}
+    }
 
 
-	if($('select#class_string_item').length || $('select#class_ip_item').length){
-		//Change the data grouplist count
-		$('select#class_string_item').attr('size', DatagroupListCount);
-		$('select#class_ip_item').attr('size', DatagroupListCount);
-	}
-	
-	//Set the default suffix of the HTTP monitors
-	if($('select[name=mon_type]').length){
-		if($('select[name=mon_type]').find(":selected").text().trim() == "HTTP"){
-			
-			monitorname = $('input[name=monitor_name]').attr("value");
-			
-			if($('input[name=monitor_name]').length && monitorname === "") {
-				$('input[name=monitor_name]').attr("value", HttpMonitorSuffix);
-			} else if ($('input[name=monitor_name]').length && !(endsWith(monitorname, HttpMonitorSuffix))) {
-				monitorname = monitorname + HttpMonitorSuffix;
-				$('input[name=monitor_name]').attr("value", monitorname);
-			}
-		}
-	}
+    if($('select#class_string_item').length || $('select#class_ip_item').length){
+        //Change the data grouplist count
+        $('select#class_string_item').attr('size', DatagroupListCount);
+        $('select#class_ip_item').attr('size', DatagroupListCount);
+    }
+    
+    //Set the default suffix of the HTTP monitors
+    if($('select[name=mon_type]').length){
+        if($('select[name=mon_type]').find(":selected").text().trim() == "HTTP"){
+            
+            monitorname = $('input[name=monitor_name]').attr("value");
+            
+            if($('input[name=monitor_name]').length && monitorname === "") {
+                $('input[name=monitor_name]').attr("value", HttpMonitorSuffix);
+            } else if ($('input[name=monitor_name]').length && !(endsWith(monitorname, HttpMonitorSuffix))) {
+                monitorname = monitorname + HttpMonitorSuffix;
+                $('input[name=monitor_name]').attr("value", monitorname);
+            }
+        }
+    }
  
-	//This function checks if an iRule exists or not
-	function checkiRule(iRuleName){
-		
+    //This function checks if an iRule exists or not
+    function checkiRule(iRuleName){
+        
         var iRuleLink = "https://" + window.location.host + "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=" + iRuleName;
         var response = '';
-		
-		//Request the iRule page to see if the instance exists or not
-		$.ajax({
-			url: iRuleLink,
-			type: "GET",
-			beforeSend: function(xhr){xhr.setRequestHeader('X-Test-Header', 'test-value');},
-			success: function(htmlresponse) { 
-				response = htmlresponse;		
-			},
-			async: false
-		});
-		
-		//Search for the string indicating if the instance exists or not
-		if (response.indexOf("Instance not found") >= 0){
-			return false;
-		} else {
-			return true;
-		}	
-	}
-	
-	//Get a cookie value. Used to get the current partition
-	//Shamelessly stolen from http://www.w3schools.com/js/js_cookies.asp
-	
-	function getCookie(cname) {
-		var name = cname + "=";
-		var ca = document.cookie.split(';');
-		for(var i=0; i<ca.length; i++) {
-			var c = ca[i];
-			while (c.charAt(0)==' ') c = c.substring(1);
-			if (c.indexOf(name) === 0) return c.substring(name.length,c.length);
-		}
-		return "";
-	}
-	
-	//Check if an iRules list in exists in the DOM
-	//This one is a bit ugly because of iframes, F5's strange DOM tree and me not being able to find an alternative
-	
-	if($('div').find("table#rule_list").find("tbody#list_body").children().length){
-		
-		//Get all iRule rows from the iRule table
-		irulerows = $('div').find("table#rule_list").find("tbody#list_body").children();
         
-		for(i=0;i<irulerows.length;i++){
-			
-			//Get each iRule name without the white spaces
+        //Request the iRule page to see if the instance exists or not
+        $.ajax({
+            url: iRuleLink,
+            type: "GET",
+            beforeSend: function(xhr){xhr.setRequestHeader('X-Test-Header', 'test-value');},
+            success: function(htmlresponse) { 
+                response = htmlresponse;        
+            },
+            async: false
+        });
+        
+        //Search for the string indicating if the instance exists or not
+        if (response.indexOf("Instance not found") >= 0){
+            return false;
+        } else {
+            return true;
+        }    
+    }
+    
+    //Get a cookie value. Used to get the current partition
+    //Shamelessly stolen from http://www.w3schools.com/js/js_cookies.asp
+    
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) === 0) return c.substring(name.length,c.length);
+        }
+        return "";
+    }
+    
+    //Check if an iRules list in exists in the DOM
+    //This one is a bit ugly because of iframes, F5's strange DOM tree and me not being able to find an alternative
+    
+    if($('div').find("table#rule_list").find("tbody#list_body").children().length){
+        
+        //Get all iRule rows from the iRule table
+        irulerows = $('div').find("table#rule_list").find("tbody#list_body").children();
+        
+        for(i=0;i<irulerows.length;i++){
+            
+            //Get each iRule name without the white spaces
             tdcontent = $(irulerows[i]).children()[0].innerHTML.trim();    
-			
-			//Get the current partition
-			currentpartition = getCookie("F5_CURRENT_PARTITION");
-			
+            
+            //Get the current partition
+            currentpartition = getCookie("F5_CURRENT_PARTITION");
+            
             var response = '';
             currentRule = $(irulerows[i]).children()[0];
             
@@ -321,26 +323,26 @@
             });
             
             
-			
+            
         }
      }
 
-	//Check if a pool is being created
-	if($('#pool_name').find('input[name=name]').length){
-		//Set the default pool name suffix 
-		$('#pool_name').find('input[name=name]').attr("value", DefaultPoolName);
-		//Set the default action on pool down value
-		$('#action_on_service_down').find('option[value="' + DefaultActionOnPoolDown + '"]').attr("SELECTED", "");
-		//Set the default LB Method
-		$('#lb_mode').find('option[value="' + DefaultLBMethod + '"]').attr("SELECTED", "");
-		//If configured, choose node as default when selecting pool members
-		if(ChooseNodeAsDefault == "Yes"){
-			$('#member_address_radio_address').attr("unchecked","");
-			$('#member_address_radio_node').attr("checked","");
-			$('#member_address_radio_node').click();
-		}
-	}
-	 
+    //Check if a pool is being created
+    if($('#pool_name').find('input[name=name]').length){
+        //Set the default pool name suffix 
+        $('#pool_name').find('input[name=name]').attr("value", DefaultPoolName);
+        //Set the default action on pool down value
+        $('#action_on_service_down').find('option[value="' + DefaultActionOnPoolDown + '"]').attr("SELECTED", "");
+        //Set the default LB Method
+        $('#lb_mode').find('option[value="' + DefaultLBMethod + '"]').attr("SELECTED", "");
+        //If configured, choose node as default when selecting pool members
+        if(ChooseNodeAsDefault == "Yes"){
+            $('#member_address_radio_address').attr("unchecked","");
+            $('#member_address_radio_node').attr("checked","");
+            $('#member_address_radio_node').click();
+        }
+    }
+     
 
 
 

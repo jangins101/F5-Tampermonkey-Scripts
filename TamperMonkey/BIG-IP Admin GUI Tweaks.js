@@ -149,7 +149,11 @@
     //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
     this.$ = this.jQuery = jQuery.noConflict(true);
 
-    // Functions 
+
+
+    // **********************************************
+    // ***** HELPER FUNCTIONS ***********************
+    // **********************************************
     function dlog(o) { 
         if (IsDebug) { console.log(o); } 
     }
@@ -163,13 +167,30 @@
     }
     
     function getParameterByName(name) {
+        // REF: http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
+    function getCookie(cname) {
+        // REF: http://www.w3schools.com/js/js_cookies.asp
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) === 0) return c.substring(name.length,c.length);
+        }
+        return "";
+    }
 
+
+
+    // **********************************************
+    // ***** EXTRA CSS ******************************
+    // **********************************************
     // This will add the css styles we use to style the links we create.
     $("<style type='text/css'> .tmLink {text-decoration:none;padding:1px 20px 1px 1px;background: rgba(150,150,0,.25) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%;border:solid 1px rgba(150,150,0,.5);} .tmLink:hover {text-decoration:none !important; background-color: rgba(150,150,0,.35)}</style>").appendTo("head");
 
@@ -206,158 +227,139 @@
         }
     }
 
-    
-        
-        
-    // ASSIGNED iRULES for MONITORS
-    if($("#monitor_rule").length && $("#available_monitor_select").length){
-        //Change the monitor count
-        $("#monitor_rule").attr('size', MonitorCount);
-        $("#available_monitor_select").attr('size', MonitorCount);
-                
-        // Add dblclick ability to add/remove iRules
-        $("#monitor_rule").dblclick(function() {  $("#available_monitor_select_button").click(); });
-        $("#available_monitor_select").dblclick(function() { $("#monitor_rule_button").click(); });
-    }
 
 
-    if($('select#class_string_item').length || $('select#class_ip_item').length){
-        //Change the data grouplist count
-        $('select#class_string_item').attr('size', DatagroupListCount);
-        $('select#class_ip_item').attr('size', DatagroupListCount);
-    }
-    
-    //Set the default suffix of the HTTP monitors
-    if($('select[name=mon_type]').length){
-        if($('select[name=mon_type]').find(":selected").text().trim() == "HTTP"){
-            
-            monitorname = $('input[name=monitor_name]').attr("value");
-            
-            if($('input[name=monitor_name]').length && monitorname === "") {
-                $('input[name=monitor_name]').attr("value", HttpMonitorSuffix);
-            } else if ($('input[name=monitor_name]').length && !(endsWith(monitorname, HttpMonitorSuffix))) {
-                monitorname = monitorname + HttpMonitorSuffix;
-                $('input[name=monitor_name]').attr("value", monitorname);
-            }
-        }
-    }
- 
     //This function checks if an iRule exists or not
-    function checkiRule(iRuleName){
+    function doesiRuleExist(partition, name) {
+        var exists = null;
         
-        var iRuleLink = "https://" + window.location.host + "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=" + iRuleName;
-        var response = '';
-        
-        //Request the iRule page to see if the instance exists or not
         $.ajax({
-            url: iRuleLink,
+            url: "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + partition + "/" + name,
             type: "GET",
-            beforeSend: function(xhr){xhr.setRequestHeader('X-Test-Header', 'test-value');},
-            success: function(htmlresponse) { 
-                response = htmlresponse;        
+            success: function(response) {
+                exists = response.indexOf("Instance not found") != -1;
             },
             async: false
         });
         
-        //Search for the string indicating if the instance exists or not
-        if (response.indexOf("Instance not found") >= 0){
-            return false;
-        } else {
-            return true;
-        }    
+        return exists;
     }
     
-    //Get a cookie value. Used to get the current partition
-    //Shamelessly stolen from http://www.w3schools.com/js/js_cookies.asp
     
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1);
-            if (c.indexOf(name) === 0) return c.substring(name.length,c.length);
-        }
-        return "";
-    }
-    
-    //Check if an iRules list in exists in the DOM
-    //This one is a bit ugly because of iframes, F5's strange DOM tree and me not being able to find an alternative
-    
-    if($('div').find("table#rule_list").find("tbody#list_body").children().length){
-        
-        //Get all iRule rows from the iRule table
-        irulerows = $('div').find("table#rule_list").find("tbody#list_body").children();
-        
-        for(i=0;i<irulerows.length;i++){
-            
-            //Get each iRule name without the white spaces
-            tdcontent = $(irulerows[i]).children()[0].innerHTML.trim();    
-            
-            //Get the current partition
-            currentpartition = getCookie("F5_CURRENT_PARTITION");
-            
-            var response = '';
-            currentRule = $(irulerows[i]).children()[0];
-            
-            //Request the iRule page to see if the instance exists in Common or not
-            $.ajax({
-                url: "https://" + window.location.host + "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/Common/" + tdcontent,
-                type: "GET",
-                currentRule: currentRule,
-                currenttdcontent: tdcontent,
-                success: function(response) {
-                    replaceContent(response, this.currentRule, this.currenttdcontent);
-                    function replaceContent(response, currentRule, currenttdcontent){
-                    if (response.indexOf("Instance not found") == -1){
-                        $(currentRule)[0].innerHTML = currenttdcontent.replace(currenttdcontent, "<a href='https://" + window.location.host + "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/Common/" + currenttdcontent + "'>" + currenttdcontent + "</a>");
-                     }
-                    }
-                },
-                async: true
-            });
- 
-            //Request the iRule page to see if the instance exists in the current partition or not
-            $.ajax({
-                url: "https://" + window.location.host + "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + currentpartition + "/" + tdcontent,
-                type: "GET",
-                currentRule: currentRule,
-                currenttdcontent: tdcontent,
-                currentpartition: currentpartition,
-                success: function(response) {
-                    replaceContent(response, this.currentRule, this.currenttdcontent, this.currentpartition);
-                    function replaceContent(response, currentRule, currenttdcontent, currentpartition){
-                    if (response.indexOf("Instance not found") == -1){
-                        $(currentRule)[0].innerHTML = currenttdcontent.replace(currenttdcontent, "<a href='https://" + window.location.host + "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + currentpartition + "/" + currenttdcontent + "'>" + currenttdcontent + "</a>");
-                     }
-                    }
-                },
-                async: true
-            });
-            
-            
-            
-        }
-     }
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/resources.jsp")) {
+        function replaceiRuleName(response, currentObject){
+            if (response.indexOf("Instance not found") != -1){ return; }
 
-    //Check if a pool is being created
-    if($('#pool_name').find('input[name=name]').length){
-        //Set the default pool name suffix 
-        $('#pool_name').find('input[name=name]').attr("value", DefaultPoolName);
-        //Set the default action on pool down value
-        $('#action_on_service_down').find('option[value="' + DefaultActionOnPoolDown + '"]').attr("SELECTED", "");
-        //Set the default LB Method
-        $('#lb_mode').find('option[value="' + DefaultLBMethod + '"]').attr("SELECTED", "");
-        //If configured, choose node as default when selecting pool members
-        if(ChooseNodeAsDefault == "Yes"){
-            $('#member_address_radio_address').attr("unchecked","");
-            $('#member_address_radio_node').attr("checked","");
-            $('#member_address_radio_node').click();
+            var a = $("<a href='/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + currentObject.partition + "/" + currentObject.name + "'>" + currentObject.name + "</a>");
+            $("td", currentObject.element).html(a);
+        }   
+        
+        // Rows 
+        var rows = $("table#rule_list tbody#list_body tr");
+        rows.each(function(idx, el) {
+            debugger;
+            var jEl = $(el);
+            var name = jEl.text().trim();
+
+            // Skip the check if there's no records to display
+            if (jEl.text().indexOf("No records to display") >= 0 ) { return; }
+
+            //Get the current partition
+            var partition = getCookie("F5_CURRENT_PARTITION") || "Common";
+            
+            // Build the replace object
+            var obj = { element: jEl, name: name, partition: partition };
+            
+            // Check for iRule existence in proper partition
+            if (doesiRuleExist(partition, name)) {
+                replaceiRuleName(response, obj);
+            } else if (doesiRuleExist("Common", name)) {
+                obj.partition = "Common";
+                replaceiRuleName(response, obj);
+            }
+        });
+    }
+
+
+
+    
+        
+    // **********************************************
+    // ***** DATAGROUPS *****************************
+    // **********************************************
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/datagroup/create.jsp")) {
+        if($('select#class_string_item').length || $('select#class_ip_item').length){
+            debugger;
+            //Change the data grouplist count
+            $('select#class_string_item').attr('size', DatagroupListCount);
+            $('select#class_ip_item').attr('size', DatagroupListCount);
+        }
+    }
+
+
+
+    // **********************************************
+    // ***** MONITORS *******************************
+    // **********************************************
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/monitor/create.jsp")) {
+        //Set the default suffix of the HTTP monitors
+        if($('select[name=mon_type]').length){
+            debugger;
+            if($('select[name=mon_type]').find(":selected").text().trim() == "HTTP"){
+
+                monitorname = $('input[name=monitor_name]').attr("value");
+
+                if($('input[name=monitor_name]').length && monitorname === "") {
+                    $('input[name=monitor_name]').attr("value", HttpMonitorSuffix);
+                } else if ($('input[name=monitor_name]').length && !(endsWith(monitorname, HttpMonitorSuffix))) {
+                    monitorname = monitorname + HttpMonitorSuffix;
+                    $('input[name=monitor_name]').attr("value", monitorname);
+                }
+            }
+        }
+    }
+
+    // Monitor selection lists on the node and pool pages
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/properties.jsp") || checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
+        // ASSIGNED iRULES for MONITORS
+        if($("#monitor_rule").length && $("#available_monitor_select").length){
+            debugger;
+            //Change the monitor count
+            $("#monitor_rule").attr('size', MonitorCount);
+            $("#available_monitor_select").attr('size', MonitorCount);
+
+            // Add dblclick ability to add/remove iRules
+            $("#monitor_rule").dblclick(function() {  $("#available_monitor_select_button").click(); });
+            $("#available_monitor_select").dblclick(function() { $("#monitor_rule_button").click(); });
+        }
+    }
+ 
+
+
+    // **********************************************
+    // ***** POOLS **********************************
+    // **********************************************
+    if (checkLocation("https://admin.globalmailonline.com/tmui/Control/jspmap/tmui/locallb/pool/create.jsp")) {
+        //Check if a pool is being created
+        if($('#pool_name').find('input[name=name]').length){
+            //Set the default pool name suffix 
+            $('#pool_name').find('input[name=name]').attr("value", DefaultPoolName);
+
+            //Set the default action on pool down value
+            $('#action_on_service_down').find('option[value="' + DefaultActionOnPoolDown + '"]').attr("SELECTED", "");
+
+            //Set the default LB Method
+            $('#lb_mode').find('option[value="' + DefaultLBMethod + '"]').attr("SELECTED", "");
+
+            //If configured, choose node as default when selecting pool members
+            if(ChooseNodeAsDefault == "Yes"){
+                $('#member_address_radio_address').attr("unchecked","");
+                $('#member_address_radio_node').attr("checked","");
+                $('#member_address_radio_node').click();
+            }
         }
     }
      
-
-
 
 
     // **********************************************

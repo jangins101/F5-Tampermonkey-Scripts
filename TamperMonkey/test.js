@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name BigiIP UI Tweaks
-// @version 0.5
+// @name Oopsie
+// @version 0.6
 // @description Tweaks the F5 UI
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
@@ -12,4 +12,5 @@
 // ==/UserScript==
  
  
- alert("testing")
+ alert("testing");
+ alert("testing2");

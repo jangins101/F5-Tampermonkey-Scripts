@@ -187,7 +187,6 @@
     }
 
 
-
     // **********************************************
     // ***** EXTRA CSS ******************************
     // **********************************************
@@ -227,62 +226,7 @@
         }
     }
 
-
-
-    //This function checks if an iRule exists or not
-    function doesiRuleExist(partition, name) {
-        var exists = null;
-        
-        $.ajax({
-            url: "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + partition + "/" + name,
-            type: "GET",
-            success: function(response) {
-                exists = response.indexOf("Instance not found") != -1;
-            },
-            async: false
-        });
-        
-        return exists;
-    }
-    
-    
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/resources.jsp")) {
-        function replaceiRuleName(response, currentObject){
-            if (response.indexOf("Instance not found") != -1){ return; }
-
-            var a = $("<a href='/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + currentObject.partition + "/" + currentObject.name + "'>" + currentObject.name + "</a>");
-            $("td", currentObject.element).html(a);
-        }   
-        
-        // Rows 
-        var rows = $("table#rule_list tbody#list_body tr");
-        rows.each(function(idx, el) {
-            debugger;
-            var jEl = $(el);
-            var name = jEl.text().trim();
-
-            // Skip the check if there's no records to display
-            if (jEl.text().indexOf("No records to display") >= 0 ) { return; }
-
-            //Get the current partition
-            var partition = getCookie("F5_CURRENT_PARTITION") || "Common";
-            
-            // Build the replace object
-            var obj = { element: jEl, name: name, partition: partition };
-            
-            // Check for iRule existence in proper partition
-            if (doesiRuleExist(partition, name)) {
-                replaceiRuleName(response, obj);
-            } else if (doesiRuleExist("Common", name)) {
-                obj.partition = "Common";
-                replaceiRuleName(response, obj);
-            }
-        });
-    }
-
-
-
-    
+   
         
     // **********************************************
     // ***** DATAGROUPS *****************************
@@ -401,6 +345,20 @@
     // **********************************************
     // ***** VIRTUAL SERVERS ************************
     // **********************************************
+        // Virtual Servers List
+        if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/list.jsp")) {
+            // This script will add a link to the virtual servers list that opens a new Network Map window with the search text of this pool name (including the "Search in iRule" option)
+            var table = $("#list_table");
+            var tbody = $("#list_body", table);
+            var trs   = $("tr", tbody);
+            trs.each(function(idx, el) {
+                var td = $($("td", el)[2]);
+                var name = td.text().trim();
+                var a = $('<small style="float:right"><a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">(show net map)</a></small>');
+                td.append(a);
+            });
+        }
+
     // Selected/Available options | Add double click ability for selection/removal
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/properties.jsp")) {
         dlog("Virtual Servers | Properties");
@@ -454,6 +412,103 @@
                 el.change(); // Execute the change function so it'll update the link
             }
         }
+        
+        
+        // iRule List Helper Functions
+        function doesiRuleExist(partition, name) {
+            //This function checks if an iRule exists or not in the given partition
+            var exists = null;
+
+            $.ajax({
+                url: "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + partition + "/" + name,
+                type: "GET",
+                success: function(response) {
+                    exists = response.indexOf("Instance not found") != -1;
+                },
+                async: false
+            });
+
+            return exists;
+        }
+
+        function replaceiRuleName(response, currentObject){
+            if (response.indexOf("Instance not found") != -1){ return; }
+            var a = $("<a href='/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + currentObject.partition + "/" + currentObject.name + "'>" + currentObject.name + "</a>");
+            $("td", currentObject.element).html(a);
+        }
+
+        // Update iRule list to use links instead of just text
+        var rows = $("table#rule_list tbody#list_body tr");
+        rows.each(function(idx, el) {
+            var jEl = $(el);
+            var name = jEl.text().trim();
+
+            // Skip the check if there's no records to display
+            if (jEl.text().indexOf("No records to display") >= 0 ) { return; }
+
+            //Get the current partition
+            var partition = getCookie("F5_CURRENT_PARTITION") || "Common";
+            
+            // Build the replace object
+            var obj = { element: jEl, name: name, partition: partition };
+            
+            // Check for iRule existence in proper partition
+            if (doesiRuleExist(partition, name)) {
+                replaceiRuleName(response, obj);
+            } else if (doesiRuleExist("Common", name)) {
+                obj.partition = "Common";
+                replaceiRuleName(response, obj);
+            }
+        });
+        
+        
+        
+        // Policy List Helper Functions
+        function doesPolicyExist(partition, name) {
+            //This function checks if an iRule exists or not in the given partition
+            var exists = null;
+
+            $.ajax({
+                url: "/tmui/Control/jspmap/tmui/locallb/policy/properties.jsp?policy_name=/" + partition + "/" + name,
+                type: "GET",
+                success: function(response) {
+                    exists = response.indexOf("Instance not found") != -1;
+                },
+                async: false
+            });
+
+            return exists;
+        }
+
+        function replacePolicyName(response, currentObject){
+            if (response.indexOf("Instance not found") != -1){ return; }
+            var a = $("<a href='/tmui/Control/jspmap/tmui/locallb/policy/properties.jsp?policy_name=/" + currentObject.partition + "/" + currentObject.name + "'>" + currentObject.name + "</a>");
+            $("td", currentObject.element).html(a);
+        }
+
+        // Update iRule list to use links instead of just text
+        var rows = $("table#policy_list tbody#list_body tr");
+        rows.each(function(idx, el) {
+            var jEl = $(el);
+            var name = jEl.text().trim();
+
+            // Skip the check if there's no records to display
+            if (jEl.text().indexOf("No records to display") >= 0 ) { return; }
+
+            //Get the current partition
+            var partition = getCookie("F5_CURRENT_PARTITION") || "Common";
+            
+            // Build the replace object
+            var obj = { element: jEl, name: name, partition: partition };
+            
+            // Check for iRule existence in proper partition
+            if (doesPolicyExist(partition, name)) {
+                replacePolicyName(response, obj);
+            } else if (doesPolicyExist("Common", name)) {
+                obj.partition = "Common";
+                replacePolicyName(response, obj);
+            }
+        });
     }
     
     // iRule & Policy selection pages
@@ -496,6 +551,7 @@
     }
 
 
+
     // **********************************************
     // ***** SESSION REPORTS ************************
     // **********************************************
@@ -536,7 +592,7 @@
     // **********************************************
         // POOL LIST
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/list.jsp")) {
-            // This script will add a link to the pools list that opens a new Network Map window with the search text of this pool name (including the "Search in iRule" option
+            // This script will add a link to the pools list that opens a new Network Map window with the search text of this pool name (including the "Search in iRule" option)
             var table = $("#list_table");
             var tbody = $("#list_body", table);
             var trs   = $("tr", tbody);

@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name Oopsie
+// @name Testing again
 // @version 0.6
 // @description Tweaks the F5 UI
 // @match https://*/tmui/Control/*
@@ -14,3 +14,5 @@
  
  alert("testing");
  alert("testing2");
+
+ alert("testing3");

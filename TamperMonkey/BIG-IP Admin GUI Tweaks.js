@@ -194,7 +194,27 @@
     // **********************************************
     // This will add the css styles we use to style the links we create.
     $("<style type='text/css'> .tmLink {text-decoration:none;padding:1px 20px 1px 1px;background: rgba(150,150,0,.25) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%;border:solid 1px rgba(150,150,0,.5);} .tmLink:hover {text-decoration:none !important; background-color: rgba(150,150,0,.35)}</style>").appendTo("head");
-
+    $("<style type='text/css'> \
+         .tmLink { \
+             text-decoration:none; \
+             padding: 1px 20px 1px 5px; \
+             url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%; \
+             /* \
+             background: rgba(255, 204, 0, .25) \
+             border: solid 1px rgba(255, 204, 0, .5); \
+             border-left: solid 3px rgba(255, 204, 0, 1); \
+             */ \
+             background-color: rgba(255, 255, 255, .5); \
+             border: 1px solid #e6e6e6; \
+             border-left: 5px solid #ddd; \
+        } \
+        .tmLink:hover { \
+             text-decoration:none !important; \
+             background-color: rgba(149, 163, 178, .5); \
+             /*border: solid 1px rgba(255, 204, 0, 1); */ \
+             border-left: solid 5px rgba(255, 204, 0, 1); \
+        } \
+      </style>").appendTo("head");
 
     // Sometimes it's good to know for debugging
     dlog("Location: " + window.location.href);

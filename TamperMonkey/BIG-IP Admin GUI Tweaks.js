@@ -1,6 +1,6 @@
     // ==UserScript==
     // @name BigiIP UI Tweaks
-    // @version 0.52
+    // @version 0.53
     // @description Tweaks the F5 UI
     // @match https://*/tmui/Control/*
     // @match https://*/sam/admin/reports/*
@@ -205,6 +205,8 @@
             });
         }
 
+
+
         // **********************************************
         // ***** EXTRA CSS ******************************
         // **********************************************
@@ -240,6 +242,7 @@
         
         // Virtual Servers List
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/list.jsp")) {
+            dlog("Virtual Servers | List");
             addNetworkMapLink();
         }
 
@@ -442,7 +445,8 @@
         
         // iRule Definition (Properties)
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp")) {
-            dlog("iRule Definition (Properties)");
+            dlog("iRules | Definition Properties");
+            
             if($('textarea#rule_definition').length){
                 //Change the iRule definition row count
                 $('textarea#rule_definition').attr('rows', iRuleDefinitionRows);
@@ -480,7 +484,8 @@
         
         // DataGroup Creation
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/datagroup/create.jsp")) {
-            dlog("DataGroup Creation");
+            dlog("Data Groups | Create");
+            
             if($('select#class_string_item').length || $('select#class_ip_item').length){
                 //Change the data grouplist count
                 $('select#class_string_item').attr('size', DatagroupListCount);
@@ -496,11 +501,14 @@
 
         // Pool List
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/list.jsp")) {
+            dlog("Pools | List");
             addNetworkMapLink();
         }
 
         // Create Pool
         if (checkLocation("https://admin.globalmailonline.com/tmui/Control/jspmap/tmui/locallb/pool/create.jsp")) {
+            dlog("Pools | Create");
+            
             //Check if a pool is being created
             if($('#pool_name').find('input[name=name]').length){
                 //Set the default pool name suffix 
@@ -527,8 +535,9 @@
         // ***** NODES **********************************
         // **********************************************
 
-        // TODO: this        // Virtual Servers List
+        // Virtual Servers List
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/list.jsp")) {
+            dlog("Nodes | List")'
             addNetworkMapLink();
         }
 
@@ -540,7 +549,7 @@
         // Access Profile List
         if (checkLocation("/tmui/Control/jspmap/tmui/accessctrl/profiles/") || 
                 checkLocation("/tmui/Control/form?__handler=/tmui/accessctrl/profiles/list&__source=list_apply&__linked=false&__fromError=false")) {
-            console.log("Checking access profile list");
+            console.log("Access Policy | List ");
 
             var rows = $("table#list_table tbody tr");
             for (var i=0; i<rows.length; i++) {
@@ -571,6 +580,8 @@
 
         // Manage Sessions
         if (checkLocation("tmui/Control/jspmap/tmui/overview/reports/current_sessions.jsp")) {
+            dlog("Access Policy | Current Sessions");
+            
             /* This script will add an extra link on the "Manage Sessions" with the text "(show variables)". 
              * It will open the APM reports page displaying the session variables for that session
              * This makes working finding the right session much simpler since we can search from the Manage Sessions screen and then open the session variables directly
@@ -593,6 +604,8 @@
 
         // Reports
         if (checkLocation("/sam/admin/reports/index.php")) {
+            dlog("Access Policy | Access Reports");
+            
             // Show Variables
             if (checkLocation("showSessionDetails=2")) {
                 // This script will execute if the user clicked the "show variables" link from above and will automatically open the session variables reports
@@ -609,6 +622,8 @@
         // ***** MONITORS *******************************
         // **********************************************
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/monitor/create.jsp")) {
+            dlog("Monitors | Create");
+            
             //Set the default suffix of the HTTP monitors
             if($('select[name=mon_type]').length){
                 debugger;
@@ -627,10 +642,12 @@
         }
 
         // Monitor selection lists on the node and pool pages
-        if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/properties.jsp") || checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
+        if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/properties.jsp") || 
+                checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
+            dlog("Monitors | Pool/Node Monitor Selection");
+            
             // ASSIGNED iRULES for MONITORS
             if($("#monitor_rule").length && $("#available_monitor_select").length){
-                debugger;
                 //Change the monitor count
                 $("#monitor_rule").attr('size', MonitorCount);
                 $("#available_monitor_select").attr('size', MonitorCount);

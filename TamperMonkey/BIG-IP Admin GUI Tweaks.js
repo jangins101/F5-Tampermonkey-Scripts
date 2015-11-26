@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name BigiIP UI Tweaks
-// @version 0.5
+// @version 0.51
 // @description Tweaks the F5 UI
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*

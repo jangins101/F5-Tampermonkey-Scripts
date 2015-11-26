@@ -23,6 +23,7 @@
         0.3         Adding noConflict to avoid problems with F5's javascripts
         0.4         Adding iRule links in the virtual server resources tab
         0.5         Adding default settings when creating pools and monitors
+        0.6         Refactor and additions
     */
      
     /***************************************************************************************
@@ -608,16 +609,20 @@
         // ***** NODES **********************************
         // **********************************************
 
-        // TODO: this
-                
-        
-        
-        // **********************************************
-        // ***** MONITORS *******************************
-        // **********************************************
+        // TODO: this        // Virtual Servers List
+        if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/list.jsp")) {
+            // This script will add a link to the virtual servers list that opens a new Network Map window with the search text of this pool name (including the "Search in iRule" option)
+            var table = $("#list_table");
+            var tbody = $("#list_body", table);
+            var trs   = $("tr", tbody);
+            trs.each(function(idx, el) {
+                var td = $($("td", el)[2]);
+                var name = td.text().trim();
+                var a = $('<small style="float:right"><a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">(show net map)</a></small>');
+                td.append(a);
+            });
+        }
 
-        // TODO: this
-        
         
 
         // **********************************************
@@ -657,5 +662,3 @@
                 window.setTimeout(function(){showSessionVariables(sid);}, 1000);
             }
         }
-
-

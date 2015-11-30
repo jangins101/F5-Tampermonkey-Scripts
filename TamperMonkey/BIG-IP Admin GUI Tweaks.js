@@ -537,7 +537,7 @@
 
         // Virtual Servers List
         if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/list.jsp")) {
-            dlog("Nodes | List")'
+            dlog("Nodes | List");
             addNetworkMapLink();
         }
 

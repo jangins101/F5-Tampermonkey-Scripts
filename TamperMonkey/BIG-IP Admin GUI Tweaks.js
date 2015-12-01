@@ -302,7 +302,7 @@
             
             
             // iRule List Helper Functions
-            function doesiRuleExist(partition, name) {
+            function doesiRuleExist(partition, name, responseObject) {
                 //This function checks if an iRule exists or not in the given partition
                 var exists = null;
 
@@ -310,7 +310,8 @@
                     url: "/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + partition + "/" + name,
                     type: "GET",
                     success: function(response) {
-                        exists = response.indexOf("Instance not found") != -1;
+                        exists = response.indexOf("Instance not found") == -1;
+                        responseObject.response = response;
                     },
                     async: false
                 });
@@ -340,11 +341,13 @@
                 var obj = { element: jEl, name: name, partition: partition };
                 
                 // Check for iRule existence in proper partition
-                if (doesiRuleExist(partition, name)) {
-                    replaceiRuleName(response, obj);
-                } else if (doesiRuleExist("Common", name)) {
+                debugger;
+                var rObj = {};
+                if (doesiRuleExist(partition, name, rObj)) {
+                    replaceiRuleName(rObj.response, obj);
+                } else if (doesiRuleExist("Common", name, rObj)) {
                     obj.partition = "Common";
-                    replaceiRuleName(response, obj);
+                    replaceiRuleName(rObj.response, obj);
                 }
             });
             
@@ -359,7 +362,7 @@
                     url: "/tmui/Control/jspmap/tmui/locallb/policy/properties.jsp?policy_name=/" + partition + "/" + name,
                     type: "GET",
                     success: function(response) {
-                        exists = response.indexOf("Instance not found") != -1;
+                        exists = response.indexOf("Instance not found") == -1;
                     },
                     async: false
                 });

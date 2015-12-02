@@ -10,7 +10,14 @@
 // @downloadURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
 // @grant none
 // @require http://code.jquery.com/jquery-latest.js
+// @require https://raw.githubusercontent.com/jangins101/jquery-simple-context-menu/master/jquery.contextmenu.js
+// @resource jqCtxMenu https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.css
+// @grant GM_addStyle
+// @grant GM_getResourceText
 // ==/UserScript==
+
+var jqCtxMenuSrc = GM_getResourceText("jqCtxMenu");
+GM_addStyle(jqCtxMenuSrc);
 
 /* 
     **************************************************
@@ -90,18 +97,43 @@
         return "";
     }
 
+    // This will redirect the user the specified url (in a new window if specified)
+    function redirect(url, newWindow) {
+        if (newWindow) {
+            window.open(url);
+        } else {
+            window.location(url);
+        }
+    }
     // This will add a link to every record in the "list_table" that opens the Network Map page in a new window
     // It will make use of the dymanic CSS addition below
     function addNetworkMapLink(col) {
-        //var table = $("#list_table");
+        var table = $("#list_table");
         //var tbody = $("#list_body", table);
         //var trs   = $("tr", tbody);
-        var trs   = $("#list_table #list_body tr");
-        trs.each(function(idx, el) {
+        //var trs   = $("#list_table #list_body tr");
+        
+        debugger;
+        // Add the header column
+        var theadTds = $("thead .columnhead td", table);
+        $("<td>Show Network Map</td>").insertAfter(theadTds[col || 2]);
+        
+        // Add the row columns
+        var tbodyTds = $("tbody tr", table);
+        tbodyTds.each(function(idx, el) {
             var td = $($("td", el)[(col || 2)]);
             var name = td.text().trim();
-            var a = $('<small style="float:right"> <a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">(show net map)</a></small>');
-            td.append(a);
+            var a = $('<td style="text-align: right;"><small><a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">&nbsp;</a></small></td>');
+            a.insertAfter(td);
+            //td.append(a);
+            
+            $("a", td).contextPopup({
+                title: 'Show network map',
+                items: [
+                        { label: 'Open', action: function() { redirect('/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + this.data + '&irule_body=true'); }, data: name },
+                        { label: 'Open in new window', icon: '/xui/framework/images/icon_jump_menu.png', action: function() { redirect('/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + this.data + '&irule_body=true', true); }, data: name }
+                    ]
+            });
         });
     }
 
@@ -167,7 +199,7 @@ dlog("Location: " + window.location.href, 3);
     // Virtual Servers List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/list.jsp")) {
         dlog("Virtual Servers | List");
-        addNetworkMapLink();
+        addNetworkMapLink();        
     }
 
     // Selected/Available options | Add double click ability for selection/removal
@@ -510,5 +542,4 @@ dlog("Location: " + window.location.href, 3);
 // ***********************************
 // ***** SECTION: Monitors ***********
 // ***********************************
-
 

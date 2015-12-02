@@ -5,8 +5,8 @@
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
 // @run-at document-end
-// @updateURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/BIG-IP%20Admin%20GUI%20Tweaks.js
-// @downloadURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/BIG-IP%20Admin%20GUI%20Tweaks.js
+// @updateURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
+// @downloadURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
 // @grant none
 // @require http://code.jquery.com/jquery-latest.js
 // ==/UserScript==

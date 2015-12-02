@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name F5 BIG-IP UI Enhancements
 // @version 1.0
+// @homepage https://github.com/jangins101/F5/blob/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker 
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
@@ -37,48 +38,37 @@
     Version     Notes
     1.0         Initial version
 
-    Version     Change
-    0.1         Original version
-    0.2         Make sure that the script is not executed when not needed
-    0.3         Adding noConflict to avoid problems with F5's javascripts
-    0.4         Adding iRule links in the virtual server resources tab
-    0.5         Adding default settings when creating pools and monitors
-    0.6         Refactor and additions
-    
-    ************************************************** 
 */
 
 
-    /*************************************************************
-        Set this script to debug mode, where things will be logged to the console
-    **************************************************************/
-    IsDebug = 1;
+    // Turns on logging for the script (useful for debugging issues)
+    //  0 - Off
+    //  1 - Notice
+    //  2 - Informational
+    //  3 - Debug
+    DebugLevel = 3;
 
-/***************************************************************************************
-                        End Config section
-****************************************************************************************/
 
     //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
     this.$ = this.jQuery = jQuery.noConflict(true);
 
 
+// ***********************************
+// ***** SECTION: Helper Functions ***
+// ***********************************
 
-    // **********************************************
-    // ***** HELPER FUNCTIONS ***********************
-    // **********************************************
-    var IsDebug = true;
-    function dlog(o) { 
-        if (IsDebug) { console.log(o); } 
+    // If the IsDebug setting not empty/undefined/false, then we'll log messages to the console
+    function dlog(o, minLevel) { 
+        if (DebugLevel && (!minLevel || (minLevel >= DebugLevel) )) { console.log(o); } 
     }
 
+    // Most functionality is specific to a certain page, so this function is used to check the current
+    //  page against a specific URL 
     function checkLocation(str) {
         return (window.location.href.indexOf(str) >= 0);
     }
-
-    function endsWith(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
-
+    
+    // This will parse the specified url parameter value form the current page URL if it exists
     function getParameterByName(name) {
         // REF: http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -87,6 +77,7 @@
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
+    // This will grab the specified cookie if it exists
     function getCookie(cname) {
         // REF: http://www.w3schools.com/js/js_cookies.asp
         var name = cname + "=";
@@ -99,13 +90,13 @@
         return "";
     }
 
+    // This will add a link to every record in the "list_table" that opens the Network Map page in a new window
+    // It will make use of the dymanic CSS addition below
     function addNetworkMapLink() {
-        /* This script will add a link to the pools list that opens a new Network Map 
-         * window with the search text of this pool name (including the "Search in iRule" option)
-         */
-        var table = $("#list_table");
-        var tbody = $("#list_body", table);
-        var trs   = $("tr", tbody);
+        //var table = $("#list_table");
+        //var tbody = $("#list_body", table);
+        //var trs   = $("tr", tbody);
+        var trs   = $("#list_table #list_body tr");
         trs.each(function(idx, el) {
             var td = $($("td", el)[2]);
             var name = td.text().trim();
@@ -115,11 +106,16 @@
     }
 
 
+    function endsWith(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
 
-    // **********************************************
-    // ***** EXTRA CSS ******************************
-    // **********************************************
-    // This will add the css styles we use to style the links we create.
+
+// ***********************************
+// ***** SECTION: Custom CSS *********
+// ***********************************
+
+    // This is the style we'll be using for the NetworkMap links created by the function above (addNetworkMapLink)
     $("<style type='text/css'> \
          .tmLink { \
              text-decoration:none; \
@@ -140,14 +136,17 @@
         } \
       </style>").appendTo("head");
 
-    // Sometimes it's good to know for debugging
-    dlog("Location: " + window.location.href);   
 
 
 
-    // **********************************************
-    // ***** VIRTUAL SERVERS ************************
-    // **********************************************
+// When debugging this script, it's nice to know what the current URL is that we're working with
+dlog("Location: " + window.location.href, 3);
+
+
+
+// ***********************************
+// ***** SECTION: Virtual Server *****
+// ***********************************
 
     // Virtual Servers List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/list.jsp")) {
@@ -177,11 +176,13 @@
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/resources.jsp")) {
         dlog("Virtual Servers | Resources");
 
+        
+        // We'er going to add links for default values on the following things
         var selects = [
             {id: "default_pool", name: "Pool", link: "pool" },
             {id: "default_persist", name: "Default Persistence", link: "profile/persistence" },
             {id: "fallback_persist", name: "Fallback Persistence", link: "profile/persistence" },
-        ];
+        ];                
         for (var i=0; i<selects.length; i++) {
             var o = selects[i];
             var el = $('select#' + o.id);
@@ -189,10 +190,11 @@
                 // Add the link to the DOM next to the select box
                 var eParent = el.parent();
                 var aId = 'link_' + o.id;
-                var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;" onclick="" title="" onmouseover="" onmouseup="" onmousedown="" target="_blank" class="" href="" onmouseout="">Open ' + o.name + ' Configuration</a>');                
+                //var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;" onclick="" title="" onmouseover="" onmouseup="" onmousedown="" target="_blank" class="" href="" onmouseout="">Open ' + o.name + ' Configuration</a>');
+                var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;">Open ' + o.name + ' Configuration</a>');
                 eParent.append(a);
 
-                // Add a change event to the selectbox so we can manage visibility and href for the pool link
+                // Add a change event to the selectbox so we will only show the link if a value is selected
                 el.change(function() {
                     var a = $(this).siblings("a");
 
@@ -227,14 +229,13 @@
 
             return exists;
         }
-
         function replaceiRuleName(response, currentObject){
             if (response.indexOf("Instance not found") != -1){ return; }
             var a = $("<a href='/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp?name=/" + currentObject.partition + "/" + currentObject.name + "'>" + currentObject.name + "</a>");
             $("td", currentObject.element).html(a);
         }
 
-        // Update iRule list to use links instead of just text
+        // Update iRule list to use links instead of just text (duplicated functionality from Patrik's script)
         var rows = $("table#rule_list tbody#list_body tr");
         rows.each(function(idx, el) {
             var jEl = $(el);
@@ -246,11 +247,10 @@
             //Get the current partition
             var partition = getCookie("F5_CURRENT_PARTITION") || "Common";
 
-            // Build the replace object
+            // Build the replacement object details
             var obj = { element: jEl, name: name, partition: partition };
 
-            // Check for iRule existence in proper partition
-            debugger;
+            // Check for iRule existence in current partition (fallback to Common partition)
             var rObj = {};
             if (doesiRuleExist(partition, name, rObj)) {
                 replaceiRuleName(rObj.response, obj);
@@ -260,10 +260,9 @@
             }
         });
 
-
-
+        
         // Policy List Helper Functions
-        function doesPolicyExist(partition, name) {
+        function doesPolicyExist(partition, name, responseObject) {
             //This function checks if an iRule exists or not in the given partition
             var exists = null;
 
@@ -272,13 +271,13 @@
                 type: "GET",
                 success: function(response) {
                     exists = response.indexOf("Instance not found") == -1;
+                    responseObject.response = response;
                 },
                 async: false
             });
 
             return exists;
         }
-
         function replacePolicyName(response, currentObject){
             if (response.indexOf("Instance not found") != -1){ return; }
             var a = $("<a href='/tmui/Control/jspmap/tmui/locallb/policy/properties.jsp?policy_name=/" + currentObject.partition + "/" + currentObject.name + "'>" + currentObject.name + "</a>");
@@ -300,12 +299,13 @@
             // Build the replace object
             var obj = { element: jEl, name: name, partition: partition };
 
-            // Check for iRule existence in proper partition
-            if (doesPolicyExist(partition, name)) {
-                replacePolicyName(response, obj);
-            } else if (doesPolicyExist("Common", name)) {
+            // Check for Policy existence in current partition (fallback to Common partition)
+            var rObj = {};
+            if (doesPolicyExist(partition, name, rObj)) {
+                replacePolicyName(rObj.response, obj);
+            } else if (doesPolicyExist("Common", name, rObj)) {
                 obj.partition = "Common";
-                replacePolicyName(response, obj);
+                replacePolicyName(rObj.response, obj);
             }
         });
     }
@@ -315,13 +315,8 @@
         dlog("Virtual Servers | Resources | iRule & Policy Selection");
 
         // Assigned iRules
-        //   Make the width of the iRules selection page the same for both list boxes.
         if($("#assigned_rules").length && $("#rule_references").length){
-            //Change the iRule selection choice
-            assignedrules = $("#assigned_rules").attr('size', iRulesCount);
-            rulereferences = $("#rule_references").attr('size', iRulesCount);
-
-            // Sync widths of the select boxes
+            // Sync widths of the select boxes to the max value
             var maxW = Math.max($("#assigned_rules").width(), $("#rule_references").width());
             $("#assigned_rules").width(maxW);
             $("#rule_references").width(maxW);
@@ -332,13 +327,8 @@
         }
 
         // Policy select boxes
-        //   Make the width of the iRules selection page the same for both list boxes.
         if ($("#assigned_l7policies").length && $("#l7policy_references").length) {
-            //Change the iRule selection choice
-            assignedrules = $("#assigned_l7policies").attr('size', iRulesCount);
-            rulereferences = $("#l7policy_references").attr('size', iRulesCount);
-
-            // Sync widths of the select boxes
+            // Sync widths of the select boxes to the max value
             var maxW = Math.max($("#assigned_l7policies").width(), $("#l7policy_references").width());
             $("#assigned_l7policies").width(maxW);
             $("#l7policy_references").width(maxW);
@@ -351,9 +341,16 @@
 
 
 
-    // **********************************************
-    // ***** IRULES *********************************
-    // **********************************************
+// ***********************************
+// ***** SECTION: iRules *************
+// ***********************************
+
+    // Virtual Servers List
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/rule/list.jsp")) {
+        dlog("iRules | List");
+        addNetworkMapLink();
+    }
+
 
     // iRule Definition (Properties)
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp")) {

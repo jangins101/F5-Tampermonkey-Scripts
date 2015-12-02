@@ -348,6 +348,7 @@ dlog("Location: " + window.location.href, 3);
     // Virtual Servers List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/rule/list.jsp")) {
         dlog("iRules | List");
+        debugger;
         addNetworkMapLink();
     }
 

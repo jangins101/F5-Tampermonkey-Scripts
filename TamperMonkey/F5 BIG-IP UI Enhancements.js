@@ -46,7 +46,7 @@
     //  1 - Notice
     //  2 - Informational
     //  3 - Debug
-    DebugLevel = 3;
+    var DebugLevel = 3;
 
 
     //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
@@ -58,7 +58,7 @@
 // ***********************************
 
     // If the IsDebug setting not empty/undefined/false, then we'll log messages to the console
-    function dlog(o, minLevel) { 
+    function dlog(o, minLevel) {
         if (DebugLevel && (!minLevel || (minLevel >= DebugLevel) )) { console.log(o); } 
     }
 
@@ -92,19 +92,35 @@
 
     // This will add a link to every record in the "list_table" that opens the Network Map page in a new window
     // It will make use of the dymanic CSS addition below
-    function addNetworkMapLink() {
+    function addNetworkMapLink(col) {
         //var table = $("#list_table");
         //var tbody = $("#list_body", table);
         //var trs   = $("tr", tbody);
         var trs   = $("#list_table #list_body tr");
         trs.each(function(idx, el) {
-            var td = $($("td", el)[2]);
+            var td = $($("td", el)[(col || 2)]);
             var name = td.text().trim();
             var a = $('<small style="float:right"> <a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">(show net map)</a></small>');
             td.append(a);
         });
     }
 
+    // This will add a doubleclick event to automate clicking a button
+    function addDoubleClick(el, btn) {
+        $("#" + el).dblclick(function() {  $("#" + btn).click(); });
+    }
+
+    // This wraps the monitor lists in a quick function to simplify adding doubleclick option
+    function addMonitorListDoubleClick() {        
+        // Add dblclick ability to add/remove iRules
+        addDoubleClick("monitor_rule", "available_monitor_select_button");
+        addDoubleClick("available_monitor_select", "monitor_rule_button");
+        
+        // Sync widths of the select boxes to the max value
+        var maxW = Math.max($("#monitor_rule").width(), $("#available_monitor_select").width());
+        $("#monitor_rule").width(maxW);
+        $("#available_monitor_select").width(maxW);
+    }
 
     function endsWith(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -259,7 +275,6 @@ dlog("Location: " + window.location.href, 3);
                 replaceiRuleName(rObj.response, obj);
             }
         });
-
         
         // Policy List Helper Functions
         function doesPolicyExist(partition, name, responseObject) {
@@ -348,66 +363,26 @@ dlog("Location: " + window.location.href, 3);
     // Virtual Servers List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/rule/list.jsp")) {
         dlog("iRules | List");
-        debugger;
+        addNetworkMapLink(1);
+    }
+
+
+
+// ***********************************
+// ***** SECTION: DataGroups *********
+// ***********************************
+
+    // Virtual Servers List
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/datagroup/list.jsp")) {
+        dlog("DataGroups | List");
         addNetworkMapLink();
     }
 
 
-    // iRule Definition (Properties)
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/rule/properties.jsp")) {
-        dlog("iRules | Definition Properties");
 
-        if($('textarea#rule_definition').length){
-            //Change the iRule definition row count
-            $('textarea#rule_definition').attr('rows', iRuleDefinitionRows);
-
-            //Catch tabs in the text areas
-            if(CatchTab == 1){
-                $("textarea").keydown(function(e) {
-                    if(e.keyCode === 9) { // tab was pressed
-                        // get caret position/selection
-                        var start = this.selectionStart;
-                        var end = this.selectionEnd;
-
-                        var $this = $(this);
-                        var value = $this.val();
-
-                        // set textarea value to: text before caret + tab + text after caret
-                        $this.val(value.substring(0, start) + "\t" + value.substring(end));
-
-                        // put caret at right position again (add one for the tab)
-                        this.selectionStart = this.selectionEnd = start + 1;
-
-                        // prevent the focus lose
-                        e.preventDefault();
-                    }
-                });
-            }
-        }
-    }
-
-
-
-    // **********************************************
-    // ***** DATAGROUPS *****************************
-    // **********************************************
-
-    // DataGroup Creation
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/datagroup/create.jsp")) {
-        dlog("Data Groups | Create");
-
-        if($('select#class_string_item').length || $('select#class_ip_item').length){
-            //Change the data grouplist count
-            $('select#class_string_item').attr('size', DatagroupListCount);
-            $('select#class_ip_item').attr('size', DatagroupListCount);
-        }
-    }
-
-
-
-    // **********************************************
-    // ***** POOLS **********************************
-    // **********************************************
+// ***********************************
+// ***** SECTION: Pools **************
+// ***********************************
 
     // Pool List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/list.jsp")) {
@@ -415,35 +390,27 @@ dlog("Location: " + window.location.href, 3);
         addNetworkMapLink();
     }
 
-    // Create Pool
-    if (checkLocation("https://admin.globalmailonline.com/tmui/Control/jspmap/tmui/locallb/pool/create.jsp")) {
+    // Poopl properties
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
+        dlog("Pools | Properties");
+        
+        // Add doubleclick for monitor select boxes
+        addMonitorListDoubleClick();
+    }
+
+    // Create pool
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/create.jsp")) {
         dlog("Pools | Create");
-
-        //Check if a pool is being created
-        if($('#pool_name').find('input[name=name]').length){
-            //Set the default pool name suffix 
-            $('#pool_name').find('input[name=name]').attr("value", DefaultPoolName);
-
-            //Set the default action on pool down value
-            $('#action_on_service_down').find('option[value="' + DefaultActionOnPoolDown + '"]').attr("SELECTED", "");
-
-            //Set the default LB Method
-            $('#lb_mode').find('option[value="' + DefaultLBMethod + '"]').attr("SELECTED", "");
-
-            //If configured, choose node as default when selecting pool members
-            if(ChooseNodeAsDefault == "Yes"){
-                $('#member_address_radio_address').attr("unchecked","");
-                $('#member_address_radio_node').attr("checked","");
-                $('#member_address_radio_node').click();
-            }
-        }
+        
+        // Add doubleclick for monitor select boxes
+        addMonitorListDoubleClick();
     }
 
 
 
-    // **********************************************
-    // ***** NODES **********************************
-    // **********************************************
+// ***********************************
+// ***** SECTION: Nodes **************
+// ***********************************
 
     // Virtual Servers List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/list.jsp")) {
@@ -451,16 +418,25 @@ dlog("Location: " + window.location.href, 3);
         addNetworkMapLink();
     }
 
+    // Create node
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/create.jsp")) {
+        dlog("Nodes | Create");
+        
+        // Add doubleclick for monitor select boxes
+        addMonitorListDoubleClick();
+    }
 
 
-    // **********************************************
-    // ***** ACCESS POLICY **************************
-    // **********************************************
+
+// ***********************************
+// ***** SECTION: Access Policy ******
+// ***********************************
+
     // Access Profile List
-    if (checkLocation("/tmui/Control/jspmap/tmui/accessctrl/profiles/") || 
-            checkLocation("/tmui/Control/form?__handler=/tmui/accessctrl/profiles/list&__source=list_apply&__linked=false&__fromError=false")) {
+    if (checkLocation("/tmui/Control/form?__handler=/tmui/accessctrl/profiles/list&__source=list_apply&__linked=false&__fromError=false")) {
         console.log("Access Policy | List ");
 
+        // Convert the Status Flag icon to a link that will apply only that Access Policy
         var rows = $("table#list_table tbody tr");
         for (var i=0; i<rows.length; i++) {
             var img = $(rows[i]).find('img[src*=status_flag_yellow]');
@@ -496,13 +472,16 @@ dlog("Location: " + window.location.href, 3);
          * It will open the APM reports page displaying the session variables for that session
          * This makes working finding the right session much simpler since we can search from the Manage Sessions screen and then open the session variables directly
          */
-        var table = $("#list_table");
-        var tbody = $("#list_body", table);
-        var as = $('a', tbody);
+        
+        //var table = $("#list_table");
+        //var tbody = $("#list_body", table);        
+        //var as = $('a', tbody);
+        var as = $('#list_table #list_body a');
             as.each(function(idx, el) {
                 var aCopy = $(el).clone();
                 var newHref = aCopy.attr("href").replace("showSessionDetails=1", "showSessionDetails=2");
                 aCopy.attr("href", newHref);
+                aCopy.attr("target", "_blank");
                 aCopy.html("(show variables)");
                 aCopy.addClass("tmLink");
                 aCopy.css({float: "right"});
@@ -528,43 +507,6 @@ dlog("Location: " + window.location.href, 3);
 
 
 
-    // **********************************************
-    // ***** MONITORS *******************************
-    // **********************************************
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/monitor/create.jsp")) {
-        dlog("Monitors | Create");
-
-        //Set the default suffix of the HTTP monitors
-        if($('select[name=mon_type]').length){
-            debugger;
-            if($('select[name=mon_type]').find(":selected").text().trim() == "HTTP"){
-
-                monitorname = $('input[name=monitor_name]').attr("value");
-
-                if($('input[name=monitor_name]').length && monitorname === "") {
-                    $('input[name=monitor_name]').attr("value", HttpMonitorSuffix);
-                } else if ($('input[name=monitor_name]').length && !(endsWith(monitorname, HttpMonitorSuffix))) {
-                    monitorname = monitorname + HttpMonitorSuffix;
-                    $('input[name=monitor_name]').attr("value", monitorname);
-                }
-            }
-        }
-    }
-
-    // Monitor selection lists on the node and pool pages
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/node/properties.jsp") || 
-            checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
-        dlog("Monitors | Pool/Node Monitor Selection");
-
-        // ASSIGNED iRULES for MONITORS
-        if($("#monitor_rule").length && $("#available_monitor_select").length){
-            //Change the monitor count
-            $("#monitor_rule").attr('size', MonitorCount);
-            $("#available_monitor_select").attr('size', MonitorCount);
-
-            // Add dblclick ability to add/remove iRules
-            $("#monitor_rule").dblclick(function() {  $("#available_monitor_select_button").click(); });
-            $("#available_monitor_select").dblclick(function() { $("#monitor_rule_button").click(); });
-        }
-    }
-
+// ***********************************
+// ***** SECTION: Monitors ***********
+// ***********************************

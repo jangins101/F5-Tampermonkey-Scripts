@@ -30,6 +30,8 @@ GM_addStyle(jqCtxMenuSrc);
     The original inspiration for this script came from Patrik Jonsson's "Web UI Tweaks" codeshare 
       (https://devcentral.f5.com/codeshare/web-ui-tweaks) on F5 DevCentral (https://devcentral.f5.com).
     
+    The latest version of the code can be found on GitHub at https://github.com/jangins101/F5/blob/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
+    
     From his script, I began to work on additional enhancements which have resulted in this Tampermonkey script.
     
     The enhancements that this script provides incude links on the list pages for virtual servers, pools, nodes, and iRules to the Network Map page, to make it easier to find other realted entities for each one.

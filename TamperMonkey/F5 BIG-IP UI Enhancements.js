@@ -32,11 +32,11 @@ GM_addStyle(jqCtxMenuSrc);
     
     From his script, I began to work on additional enhancements which have resulted in this Tampermonkey script.
     
-    The enhancements that this script provides incude links on the list pages for nodes, pools and virtual server to the Network Map page, to make it easier to find other realted entities for each one.
+    The enhancements that this script provides incude links on the list pages for virtual servers, pools, nodes, and iRules to the Network Map page, to make it easier to find other realted entities for each one.
     It also includes an enhancement to the APM "Manage Sessions" page that will link to the session variable for a given session (since there's been no quick and easy search functionality in the Access Reports).
-    There are other enhancements throughout the configuration pages that add links to other configurations (e.g. a virtual server's default pool will have a link to open the pool configuration page.
+    Also, for any item that has the Network Map link, you can right-click the entity name and open the network map in a new window or in the same window - in addition to just clicking the link within the table. This also includes the Manage Sessions link to session details/variables.
+    There are other enhancements throughout the configuration pages that add links to other configurations (e.g. a virtual server's default pool will have a link to open the pool configuration page).
     Other enhancements may be seen in the code comments below
-
 
     **************************************************
     ***** Version History Notes **********************
@@ -102,7 +102,7 @@ GM_addStyle(jqCtxMenuSrc);
         if (newWindow) {
             window.open(url);
         } else {
-            window.location(url);
+            window.location = url;
         }
     }
     // This will add a link to every record in the "list_table" that opens the Network Map page in a new window
@@ -438,8 +438,11 @@ dlog("Location: " + window.location.href, 3);
         // Add doubleclick for monitor select boxes
         addMonitorListDoubleClick();
     }
-
-
+    // Pool Members
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/resources.jsp?name=")) {
+        dlog("Pools | Members");        
+        addNetworkMapLink();
+    }
 
 // ***********************************
 // ***** SECTION: Nodes **************
@@ -505,7 +508,38 @@ dlog("Location: " + window.location.href, 3);
          * It will open the APM reports page displaying the session variables for that session
          * This makes working finding the right session much simpler since we can search from the Manage Sessions screen and then open the session variables directly
          */
+        var table = $("#list_table");
         
+        // Add the header column
+        var theadTds = $("thead .columnhead td", table);
+        $("<td>Session Variables</td>").insertAfter(theadTds[2]);
+        
+        // Add the row columns
+        var tbodyTds = $("tbody tr", table);
+        tbodyTds.each(function(idx, el) {
+            debugger;
+            var td = $($("td", el)[2]);
+            
+            var aCopy = $("a", td).clone();
+            var newHref = aCopy.attr("href").replace("showSessionDetails=1", "showSessionDetails=2");            
+            aCopy.attr("href", newHref);
+            aCopy.attr("target", "_blank");
+            aCopy.html("show");
+            aCopy.addClass("tmLink");
+            //aCopy.css({float: "right"});
+            $('<td></td>').append(aCopy).insertAfter(td);
+
+            
+            $("a", td).contextPopup({
+                title: 'Show session variables',
+                items: [
+                        { label: 'Open', action: function() { debugger; redirect(newHref); } },
+                        { label: 'Open in new window', icon: '/xui/framework/images/icon_jump_menu.png', action: function() { redirect(newHref, true); } }
+                    ]
+            });
+        });
+        return;
+
         //var table = $("#list_table");
         //var tbody = $("#list_body", table);        
         //var as = $('a', tbody);

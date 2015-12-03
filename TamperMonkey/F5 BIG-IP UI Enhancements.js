@@ -109,11 +109,7 @@ GM_addStyle(jqCtxMenuSrc);
     // It will make use of the dymanic CSS addition below
     function addNetworkMapLink(col) {
         var table = $("#list_table");
-        //var tbody = $("#list_body", table);
-        //var trs   = $("tr", tbody);
-        //var trs   = $("#list_table #list_body tr");
         
-        debugger;
         // Add the header column
         var theadTds = $("thead .columnhead td", table);
         $("<td>Show Network Map</td>").insertAfter(theadTds[col || 2]);
@@ -123,7 +119,7 @@ GM_addStyle(jqCtxMenuSrc);
         tbodyTds.each(function(idx, el) {
             var td = $($("td", el)[(col || 2)]);
             var name = td.text().trim();
-            var a = $('<td style="text-align: right;"><small><a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">&nbsp;</a></small></td>');
+            var a = $('<td style="text-align: center;"><small><a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">Open</a></small></td>');
             a.insertAfter(td);
             //td.append(a);
             
@@ -166,21 +162,17 @@ GM_addStyle(jqCtxMenuSrc);
     // This is the style we'll be using for the NetworkMap links created by the function above (addNetworkMapLink)
     $("<style type='text/css'> \
          .tmLink { \
-             text-decoration:none; \
-             padding: 1px 20px 1px 5px; \
-             background: rgba(255, 255, 255, .5) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%; \
-             /* \
-             border: solid 1px rgba(255, 204, 0, .5); \
-             border-left: solid 3px rgba(255, 204, 0, 1); \
-             */ \
-             border: 1px solid #e6e6e6; \
-             border-left: 5px solid #ddd; \
+            text-decoration:none; \
+            padding: 1px 20px 1px 5px; \
+            background: rgba(255, 255, 255, .5) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%; \
+            border: 1px solid #e6e6e6; \
+            border-left: 5px solid #e6e6e6; \
+            color: #666 !important; \
         } \
         .tmLink:hover { \
-             text-decoration:none !important; \
-             background-color: rgba(149, 163, 178, .1); \
-             /*border: solid 1px rgba(255, 204, 0, 1); */ \
-             border-left: solid 5px rgba(255, 204, 0, 1); \
+            text-decoration:none !important; \
+            background-color: rgba(149, 163, 178, .1); \
+            border-left: solid 5px rgba(255, 204, 0, 1); \
         } \
       </style>").appendTo("head");
 

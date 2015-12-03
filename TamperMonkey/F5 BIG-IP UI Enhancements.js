@@ -137,17 +137,23 @@ GM_addStyle(jqCtxMenuSrc);
     function addDoubleClick(el, btn) {
         $("#" + el).dblclick(function() {  $("#" + btn).click(); });
     }
+    
+    // Sync width to the maximum between 2 select boxes
+    function syncWidths(el1, el2) {        
+        // Sync widths of the select boxes to the max value
+        var maxW = Math.max($("#" + el1).width(), $("#" + el2).width());
+        $("#" + el1).width(maxW);
+        $("#" + el2).width(maxW);
+    }
 
     // This wraps the monitor lists in a quick function to simplify adding doubleclick option
-    function addMonitorListDoubleClick() {        
+    function addMonitorListDoubleClick() {
         // Add dblclick ability to add/remove iRules
         addDoubleClick("monitor_rule", "available_monitor_select_button");
         addDoubleClick("available_monitor_select", "monitor_rule_button");
         
         // Sync widths of the select boxes to the max value
-        var maxW = Math.max($("#monitor_rule").width(), $("#available_monitor_select").width());
-        $("#monitor_rule").width(maxW);
-        $("#available_monitor_select").width(maxW);
+        syncWidths("monitor_rule", "available_monitor_select");
     }
 
     function endsWith(str, suffix) {
@@ -197,18 +203,21 @@ dlog("Location: " + window.location.href, 3);
     // Selected/Available options | Add double click ability for selection/removal
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/properties.jsp")) {
         dlog("Virtual Servers | Properties");
-
+        
         //  SSL Profile (client)
-        $("#selectedclientsslprofiles").dblclick(function() { $("#availableclientsslprofiles_button").click(); });
-        $("#availableclientsslprofiles").dblclick(function() { $("#selectedclientsslprofiles_button").click(); });
+        addDoubleClick("selectedclientsslprofiles", "availableclientsslprofiles_button");
+        addDoubleClick("availableclientsslprofiles", "selectedclientsslprofiles_button");
+        syncWidths("selectedclientsslprofiles", "availableclientsslprofiles");
 
         //  SSL Profile (server)
-        $("#selectedserversslprofiles").dblclick(function() { $("#availableserversslprofiles_button").click(); });
-        $("#availableserversslprofiles").dblclick(function() { $("#selectedserversslprofiles_button").click(); });
+        addDoubleClick("selectedserversslprofiles", "availableserversslprofiles_button");
+        addDoubleClick("availableserversslprofiles", "selectedserversslprofiles_button");
+        syncWidths("selectedserversslprofiles", "availableserversslprofiles");
 
         //  VLANs and Tunnels
-        $("#selected_vlans").dblclick(function() { $("#available_vlans_button").click(); });
-        $("#available_vlans").dblclick(function() { $("#selected_vlans_button").click(); });
+        addDoubleClick("selected_vlans", "available_vlans_button");
+        addDoubleClick("available_vlans", "selected_vlans_button");
+        syncWidths("selected_vlans", "available_vlans");
     }
 
     // Load Balancing selections

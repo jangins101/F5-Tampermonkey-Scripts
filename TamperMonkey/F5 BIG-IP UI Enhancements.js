@@ -470,63 +470,30 @@ dlog("Location: " + window.location.href, 3);
     // Access Profile List
     if (checkLocation("/tmui/Control/jspmap/tmui/accessctrl/profiles/list.jsp") || checkLocation("/tmui/Control/form?__handler=/tmui/accessctrl/profiles/list")) {
         console.log("Access Policy | List ");
- debugger;
         
         // Convert the Status Flag icon to a link that will apply only that Access Policy
         var rows = $("table#list_table tbody tr");
         for (var i=0; i<rows.length; i++) {
             var tr = $(rows[i]);
-//            var img = tr.find('img[src*=status_flag_yellow]');
-            var img = tr.find('img[src*=status_flag_]');
+            var img = tr.find('img[src*=status_flag_yellow]');
             
             var name = $("input[type=checkbox]", tr).val();
             
             // Create the context menu
             img.contextPopup({
                     title: 'Apply Access Policy',
-                    items: [
-                        { label: 'Apply this policy', action: function() {    debugger;
-                                                                              var form = this.data.row.closest("form");
-                                                                              $("tbody tr td:nth-child(1) input[type=checkbox]", form).prop('checked', false);
-                                                                              $("td:nth-child(1) input[type=checkbox]", this.data.row).prop('checked', true);
-                                                                          
-                                                                              // Submit the form
-                                                                              form.find("input[type=submit]#list_apply").click();
-                                                                              //form.submit();
-                                                                              
-                                                                         }, data: {name: name, row: img.closest("tr")} }
+                    items: [{
+                        label: 'Apply this policy',
+                        action: function() {
+                            var form = this.data.row.closest("form");
+                            $("tbody tr td:nth-child(1) input[type=checkbox]", form).prop('checked', false);
+                            $("td:nth-child(1) input[type=checkbox]", this.data.row).prop('checked', true);
+
+                            // Submit the form
+                            form.find("input[type=submit]#list_apply").click();
+                        }, data: {name: name, row: img.closest("tr")} }
                     ]
-                });
-            
-            if (0 && img.length > 0) {
-               img.contextPopup({
-                    title: 'Apply Access Policy',
-                    items: [
-                        { label: 'Apply this policy', action: function() { debugger; }, data: img.closest("tr") }
-                    ]
-                });
-                /*
-                // Make an A tag with onclick
-                var el = $("<a href='#' style='background: #ffcccc;padding: 5px;border: solid 1px #ff0000;'></a>");
-                el.append(img.clone());
-                el.click(function() {
-                    console.log("Testing"); 
- 
-                    // Uncheck all the boxes
-                    var tbody = $(this).closest("tbody");
-                    tbody.find("input[type=checkbox]").attr('checked', false);
- 
-                    // Check just this box
-                    $(this).closest("tr")
-                        .find("input[type=checkbox]")
-                        .attr('checked', true);
- 
-                    // Submit the form
-                    $(this).closest("form").find("input[type=submit]#list_apply").click();
-                });
-                img.parent().html(el);
-                */
-            }
+            });
         }
     }
  

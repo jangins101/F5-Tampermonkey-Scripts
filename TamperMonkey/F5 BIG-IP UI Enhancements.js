@@ -1,16 +1,13 @@
 // ==UserScript==
 // @name F5 BIG-IP UI Enhancements
-// @version 1.1
+// @version 1.0
 // @homepage https://github.com/jangins101/F5/blob/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker 
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
 // @run-at document-end
-// @updateURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
-// @downloadURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
-// @grant none
 // @require http://code.jquery.com/jquery-latest.js
-// @require https://raw.githubusercontent.com/jangins101/jquery-simple-context-menu/master/jquery.contextmenu.js
+// @require https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.js
 // @resource jqCtxMenu https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.css
 // @grant GM_addStyle
 // @grant GM_getResourceText
@@ -34,7 +31,7 @@ GM_addStyle(jqCtxMenuSrc);
     
     From his script, I began to work on additional enhancements which have resulted in this Tampermonkey script.
     
-    The enhancements that this script provides incude links on the list pages for virtual servers, pools, nodes, and iRules to the Network Map page, to make it easier to find other realted entities for each one.
+    The enhancements that this script provides include links on the list pages for virtual servers, pools, nodes, and iRules to the Network Map page, to make it easier to find other related entities for each one.
     It also includes an enhancement to the APM "Manage Sessions" page that will link to the session variable for a given session (since there's been no quick and easy search functionality in the Access Reports).
     Also, for any item that has the Network Map link, you can right-click the entity name and open the network map in a new window or in the same window - in addition to just clicking the link within the table. This also includes the Manage Sessions link to session details/variables.
     There are other enhancements throughout the configuration pages that add links to other configurations (e.g. a virtual server's default pool will have a link to open the pool configuration page).
@@ -503,7 +500,7 @@ dlog("Location: " + window.location.href, 3);
     }
 
     // Manage Sessions
-    if (checkLocation("tmui/Control/jspmap/tmui/overview/reports/current_sessions.jsp") || checkLocation("/tmui/Control/form?__handler=/tmui/overview/reports/current_sessions")) {        
+    if (checkLocation("tmui/Control/jspmap/tmui/overview/reports/current_sessions.jsp")) {
         dlog("Access Policy | Current Sessions");
 
         /* This script will add an extra link on the "Manage Sessions" with the text "(show variables)". 
@@ -511,6 +508,7 @@ dlog("Location: " + window.location.href, 3);
          * This makes working finding the right session much simpler since we can search from the Manage Sessions screen and then open the session variables directly
          */
         var table = $("#list_table");
+        
         // Add the header column
         var theadTds = $("thead .columnhead td", table);
         $("<td>Session Variables</td>").insertAfter(theadTds[2]);
@@ -572,9 +570,3 @@ dlog("Location: " + window.location.href, 3);
             window.setTimeout(function(){showSessionVariables(sid);}, 1000);
         }
     }
-
-
-
-// ***********************************
-// ***** SECTION: Monitors ***********
-// ***********************************

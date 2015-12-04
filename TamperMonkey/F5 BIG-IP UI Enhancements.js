@@ -24,7 +24,7 @@ GM_addStyle(jqCtxMenuSrc);
     ***** Description ********************************
     **************************************************
 
-    This script was designed in order ot enhance the existing UI of the F5 BIG-IP.
+    This script was designed in order to enhance the existing UI of the F5 BIG-IP.
     It was originally written for v11.5.1, but should work for many earlier and later versions as well.
     
     The original inspiration for this script came from Patrik Jonsson's "Web UI Tweaks" codeshare 
@@ -572,3 +572,9 @@ dlog("Location: " + window.location.href, 3);
             window.setTimeout(function(){showSessionVariables(sid);}, 1000);
         }
     }
+
+
+
+// ***********************************
+// ***** SECTION: Monitors ***********
+// ***********************************

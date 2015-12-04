@@ -503,7 +503,7 @@ dlog("Location: " + window.location.href, 3);
     }
 
     // Manage Sessions
-    if (checkLocation("tmui/Control/jspmap/tmui/overview/reports/current_sessions.jsp")) {
+    if (checkLocation("tmui/Control/jspmap/tmui/overview/reports/current_sessions.jsp") || checkLocation("/tmui/Control/form?__handler=/tmui/overview/reports/current_sessions")) {        
         dlog("Access Policy | Current Sessions");
 
         /* This script will add an extra link on the "Manage Sessions" with the text "(show variables)". 
@@ -511,7 +511,6 @@ dlog("Location: " + window.location.href, 3);
          * This makes working finding the right session much simpler since we can search from the Manage Sessions screen and then open the session variables directly
          */
         var table = $("#list_table");
-        
         // Add the header column
         var theadTds = $("thead .columnhead td", table);
         $("<td>Session Variables</td>").insertAfter(theadTds[2]);
@@ -573,10 +572,3 @@ dlog("Location: " + window.location.href, 3);
             window.setTimeout(function(){showSessionVariables(sid);}, 1000);
         }
     }
-
-
-
-// ***********************************
-// ***** SECTION: Monitors ***********
-// ***********************************
-

@@ -550,24 +550,6 @@ dlog("Location: " + window.location.href, 3);
                     ]
             });
         });
-        return;
- 
-        //var table = $("#list_table");
-        //var tbody = $("#list_body", table);        
-        //var as = $('a', tbody);
-        var as = $('#list_table #list_body a');
-            as.each(function(idx, el) {
-                var aCopy = $(el).clone();
-                var newHref = aCopy.attr("href").replace("showSessionDetails=1", "showSessionDetails=2");
-                aCopy.attr("href", newHref);
-                aCopy.attr("target", "_blank");
-                aCopy.html("(show variables)");
-                aCopy.addClass("tmLink");
-                aCopy.css({float: "right"});
- 
-                var td = $(el).parent();
-                td.append(aCopy);
-            });
     }
  
     // Reports

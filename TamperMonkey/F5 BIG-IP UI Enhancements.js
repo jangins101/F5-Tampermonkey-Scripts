@@ -155,6 +155,17 @@ GM_addStyle(jqCtxMenuSrc);
         syncWidths("monitor_rule", "available_monitor_select");
     }
  
+    // This wraps the necessary code to add create a context menu for an item and append the item value to the URL 
+    function addContextMenu(el, title, url) {
+        $("#" + el).contextPopup({
+            title: title,
+            items: [
+                { label: 'Open', action: function(e, data) { debugger; if (e.target.value) { redirect(data + e.target.value); } }, data: url },
+                { label: 'Open in new window', icon: '/xui/framework/images/icon_jump_menu.png', action: function(e, data) { if (e.target.value) { redirect(data + e.target.value, true); } }, data: url }
+            ]
+        });
+    }
+
     function endsWith(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
     }
@@ -207,11 +218,15 @@ dlog("Location: " + window.location.href, 3);
         addDoubleClick("selectedclientsslprofiles", "availableclientsslprofiles_button");
         addDoubleClick("availableclientsslprofiles", "selectedclientsslprofiles_button");
         syncWidths("selectedclientsslprofiles", "availableclientsslprofiles");
+        addContextMenu("selectedclientsslprofiles", "SSL Profile Config", "/tmui/Control/jspmap/tmui/locallb/profile/clientssl/properties.jsp?name=");
+        addContextMenu("availableclientsslprofiles", "SSL Profile Config", "/tmui/Control/jspmap/tmui/locallb/profile/clientssl/properties.jsp?name=");
  
         //  SSL Profile (server)
         addDoubleClick("selectedserversslprofiles", "availableserversslprofiles_button");
         addDoubleClick("availableserversslprofiles", "selectedserversslprofiles_button");
         syncWidths("selectedserversslprofiles", "availableserversslprofiles");
+        addContextMenu("selectedserversslprofiles", "SSL Profile Config", "/tmui/Control/jspmap/tmui/locallb/profile/serverssl/properties.jsp?name=");
+        addContextMenu("availableserversslprofiles", "SSL Profile Config", "/tmui/Control/jspmap/tmui/locallb/profile/serverssl/properties.jsp?name=");
  
         //  VLANs and Tunnels
         addDoubleClick("selected_vlans", "available_vlans_button");

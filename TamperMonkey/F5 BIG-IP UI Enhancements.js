@@ -3,6 +3,8 @@
 // @version 1.1
 // @homepage https://github.com/jangins101/F5/blob/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker 
+// @updateURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
+// @downloadURL https://raw.githubusercontent.com/jangins101/F5/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
 // @run-at document-end

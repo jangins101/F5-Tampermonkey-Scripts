@@ -516,7 +516,7 @@ dlog("Location: " + window.location.href, 3);
     }
  
     // Manage Sessions
-    if (checkLocation("tmui/Control/jspmap/tmui/overview/reports/current_sessions.jsp")) {
+    if (checkLocation("tmui/Control/jspmap/tmui/overview/reports/current_sessions.jsp") || checkLocation("/tmui/Control/form?__handler=/tmui/overview/reports/current_sessions")) {
         dlog("Access Policy | Current Sessions");
  
         /* This script will add an extra link on the "Manage Sessions" with the text "(show variables)". 

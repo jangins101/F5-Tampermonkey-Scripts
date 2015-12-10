@@ -493,7 +493,7 @@ dlog("Location: " + window.location.href, 3);
         var rows = $("table#list_table tbody tr");
         for (var i=0; i<rows.length; i++) {
             var tr = $(rows[i]);
-            var img = tr.find('img[src*=status_flag_yellow]');
+            var img = tr.find('img[src*=status_flag]');
             
             var name = $("input[type=checkbox]", tr).val();
             

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 BIG-IP UI Enhancements
-// @version 1.1
+// @version 1.2
 // @homepage https://github.com/jangins101/F5/blob/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker 
 // @updateURL https://github.com/jangins101/F5/raw/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
@@ -46,6 +46,7 @@ GM_addStyle(jqCtxMenuSrc);
     Version     Notes
     1.0         Initial version
     1.1         Added context menu for SSL profiles on virtual server properties page
+    1.2         Added network map link for nodes using a Monitor instance
  
 */
  
@@ -107,20 +108,22 @@ GM_addStyle(jqCtxMenuSrc);
             window.location = url;
         }
     }
+
     // This will add a link to every record in the "list_table" that opens the Network Map page in a new window
     // It will make use of the dymanic CSS addition below
-    function addNetworkMapLink(col) {
+    function addNetworkMapLink(col, nameFcn) {
+        col = (col >= 0 ? col : 2);
         var table = $("#list_table");
         
         // Add the header column
         var theadTds = $("thead .columnhead td", table);
-        $("<td>Show Network Map</td>").insertAfter(theadTds[col || 2]);
+        $("<td>Show Network Map</td>").insertAfter(theadTds[col]);
         
         // Add the row columns
         var tbodyTds = $("tbody tr", table);
         tbodyTds.each(function(idx, el) {
-            var td = $($("td", el)[(col || 2)]);
-            var name = td.text().trim();
+            var td = $($("td", el)[col]);
+            var name = ((nameFcn && typeof(nameFcn) === "function") ? nameFcn(el) : td.text().trim());
             var a = $('<td style="text-align: center;"><small><a class="tmLink" data-link="' + name + '" target="_blank" href="/tmui/Control/form?form_page=%2Ftmui%2Flocallb%2Fnetwork_map.jsp&show_map=1&SearchString=' + name + '&irule_body=true">Open</a></small></td>');
             a.insertAfter(td);
             //td.append(a);
@@ -163,7 +166,7 @@ GM_addStyle(jqCtxMenuSrc);
         $("#" + el).contextPopup({
             title: title,
             items: [
-                { label: 'Open', action: function(e, data) { debugger; if (e.target.value) { redirect(data + e.target.value); } }, data: url },
+                { label: 'Open', action: function(e, data) { if (e.target.value) { redirect(data + e.target.value); } }, data: url },
                 { label: 'Open in new window', icon: '/xui/framework/images/icon_jump_menu.png', action: function(e, data) { if (e.target.value) { redirect(data + e.target.value, true); } }, data: url }
             ]
         });
@@ -461,6 +464,8 @@ dlog("Location: " + window.location.href, 3);
         addNetworkMapLink();
     }
  
+
+
 // ***********************************
 // ***** SECTION: Nodes **************
 // ***********************************
@@ -479,7 +484,21 @@ dlog("Location: " + window.location.href, 3);
         addMonitorListDoubleClick();
     }
  
+
+
+// ***********************************
+// ***** SECTION: Monitors ***********
+// ***********************************
+
+    // Monitor Instances List
+    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/monitor/instances.jsp")) {
+        dlog("Monitors | Instances");
+        addNetworkMapLink(0, function(row) {
+            return $($("td", row)[1]).text().trim() + ":" + $($("td", row)[2]).text().trim();
+        });
+    }
  
+
  
 // ***********************************
 // ***** SECTION: Access Policy ******
@@ -532,7 +551,6 @@ dlog("Location: " + window.location.href, 3);
         // Add the row columns
         var tbodyTds = $("tbody tr", table);
         tbodyTds.each(function(idx, el) {
-            debugger;
             var td = $($("td", el)[2]);
             
             var aCopy = $("a", td).clone();
@@ -548,7 +566,7 @@ dlog("Location: " + window.location.href, 3);
             $("a", td).contextPopup({
                 title: 'Show session variables',
                 items: [
-                        { label: 'Open', action: function() { debugger; redirect(newHref); } },
+                        { label: 'Open', action: function() { redirect(newHref); } },
                         { label: 'Open in new window', icon: '/xui/framework/images/icon_jump_menu.png', action: function() { redirect(newHref, true); } }
                     ]
             });

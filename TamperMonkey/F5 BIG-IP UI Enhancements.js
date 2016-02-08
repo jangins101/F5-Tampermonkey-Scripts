@@ -213,7 +213,7 @@ dlog("Location: " + window.location.href, 3);
     // Virtual Servers List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/list.jsp")) {
         dlog("Virtual Servers | List");
-        addNetworkMapLink();        
+        //addNetworkMapLink();        
     }
  
     // Selected/Available options | Add double click ability for selection/removal

@@ -1,22 +1,17 @@
 // ==UserScript==
 // @name F5 APM UI - Session Reports
 // @version 1.0
-// @homepage https://github.com/jangins101/F5/blob/master/TamperMonkey/F5 APM UI - Session Reports.js
+// @homepage https://github.com/jangins101/F5-Tampermonkey-Scripts/blob/master/F5%20UI%20Enhancements%20for%20APM.js
 // @description Modifies the Manage Session list to include a link so you can open session variables from there instead of going thruogh the Reports section
-// @updateURL https://github.com/jangins101/F5/raw/master/TamperMonkey/F5 APM UI - Session Reports.js
-// @downloadURL https://github.com/jangins101/F5/raw/master/TamperMonkey/F5 APM UI - Session Reports.js
+// @updateURL https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20for%20APM.js
+// @downloadURL https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20for%20APM.js
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
 // @run-at document-end
 // @require http://code.jquery.com/jquery-latest.js
-// @require https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.js
-// @resource jqCtxMenu https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.css
 // @grant GM_addStyle
 // @grant GM_getResourceText
 // ==/UserScript==
-
-var jqCtxMenuSrc = GM_getResourceText("jqCtxMenu");
-GM_addStyle(jqCtxMenuSrc);
 
 /* 
     **************************************************
@@ -44,9 +39,7 @@ GM_addStyle(jqCtxMenuSrc);
     **************************************************
 
     Version     Notes
-    1.0         Initial version
-    1.1         Added context menu for SSL profiles on virtual server properties page
-    1.2         Added network map link for nodes using a Monitor instance
+    1.0         Initial version - Pulled out of the other script I built
 
 */
 
@@ -72,8 +65,7 @@ GM_addStyle(jqCtxMenuSrc);
         if (DebugLevel && (!minLevel || (minLevel >= DebugLevel) )) { console.log(o); } 
     }
 
-    // Most functionality is specific to a certain page, so this function is used to check the current
-    //  page against a specific URL 
+    // Most functionality is specific to a certain page, so this function is used to check the current page against a specific URL 
     function checkLocation(str) {
         return (window.location.href.indexOf(str) >= 0);
     }
@@ -108,22 +100,6 @@ GM_addStyle(jqCtxMenuSrc);
             window.location = url;
         }
     }
-
-    // This wraps the necessary code to add create a context menu for an item and append the item value to the URL
-    function addContextMenu(el, title, url) {
-        $("#" + el).contextPopup({
-            title: title,
-            items: [
-                { label: 'Open', action: function(e, data) { if (e.target.value) { redirect(data + e.target.value); } }, data: url },
-                { label: 'Open in new window', icon: '/xui/framework/images/icon_jump_menu.png', action: function(e, data) { if (e.target.value) { redirect(data + e.target.value, true); } }, data: url }
-            ]
-        });
-    }
-
-    function endsWith(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-    }
-
 
 // ***********************************
 // ***** SECTION: Custom CSS *********

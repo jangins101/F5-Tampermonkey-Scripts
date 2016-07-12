@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 BIG-IP UI Enhancements
-// @version 1.2
+// @version 1.3
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20BIG-IP%20UI%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker 
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20BIG-IP%20UI%20Enhancements.js
@@ -47,6 +47,7 @@ GM_addStyle(jqCtxMenuSrc);
     1.0         Initial version
     1.1         Added context menu for SSL profiles on virtual server properties page
     1.2         Added network map link for nodes using a Monitor instance
+    1.3         Removed APM stuff because I moved it to a separate script
  
 */
  

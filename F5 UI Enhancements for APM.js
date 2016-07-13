@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name F5 APM UI - Session Reports
+// @name F5 UI Enhancements for APM
 // @version 1.0
 // @homepage https://github.com/jangins101/F5-Tampermonkey-Scripts/blob/master/F5%20UI%20Enhancements%20for%20APM.js
 // @description Modifies the Manage Session list to include a link so you can open session variables from there instead of going thruogh the Reports section

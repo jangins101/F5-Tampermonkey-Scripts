@@ -22,28 +22,17 @@
     ***** Description ********************************
     **************************************************
 
-    This script was designed in order to enhance the existing UI of the F5 BIG-IP.
-    It was originally written for v11.5.1, but should work for many earlier and later versions as well.
-
-    The original inspiration for this script came from Patrik Jonsson's "Web UI Tweaks" codeshare 
-      (https://devcentral.f5.com/codeshare/web-ui-tweaks) on F5 DevCentral (https://devcentral.f5.com).
-
-    The latest version of the code can be found on GitHub at https://github.com/jangins101/F5/blob/master/TamperMonkey/F5%20BIG-IP%20UI%20Enhancements.js
-
-    From his script, I began to work on additional enhancements which have resulted in this Tampermonkey script.
-
-    The enhancements that this script provides include links on the list pages for virtual servers, pools, nodes, and iRules to the Network Map page, to make it easier to find other related entities for each one.
-    It also includes an enhancement to the APM "Manage Sessions" page that will link to the session variable for a given session (since there's been no quick and easy search functionality in the Access Reports).
-    Also, for any item that has the Network Map link, you can right-click the entity name and open the network map in a new window or in the same window - in addition to just clicking the link within the table. This also includes the Manage Sessions link to session details/variables.
-    There are other enhancements throughout the configuration pages that add links to other configurations (e.g. a virtual server's default pool will have a link to open the pool configuration page).
-    Other enhancements may be seen in the code comments below
-
+    This script is designed to act as a wrapper for other TamperMonkey scripts that will be used for different purposes
+    
+    In this version, it will include a script for LTM and a script for APM. This is in order to separate the code a little bit for better code manageability.
+    
+    
     **************************************************
     ***** Version History Notes **********************
     **************************************************
 
     Version     Notes
-    1.0         Initial version - Pulled out of the other script I built
+    1.0         Initial version - Include the APM and LTM scripts
 
 */
 

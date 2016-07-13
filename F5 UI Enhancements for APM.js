@@ -44,89 +44,32 @@
 */
 
 
-    // Turns on logging for the script (useful for debugging issues)
-    //  0 - Off
-    //  1 - Notice
-    //  2 - Informational
-    //  3 - Debug
-    var DebugLevel = 3;
-
-
-    //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
-    this.$ = this.jQuery = jQuery.noConflict(true);
-
-
-// ***********************************
-// ***** SECTION: Helper Functions ***
-// ***********************************
-
-    // If the IsDebug setting not empty/undefined/false, then we'll log messages to the console
-    function dlog(o, minLevel) {
-        if (DebugLevel && (!minLevel || (minLevel >= DebugLevel) )) { console.log(o); } 
-    }
-
-    // Most functionality is specific to a certain page, so this function is used to check the current page against a specific URL 
-    function checkLocation(str) {
-        return (window.location.href.indexOf(str) >= 0);
-    }
-
-    // This will parse the specified url parameter value form the current page URL if it exists
-    function getParameterByName(name) {
-        // REF: http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-
-    // This will grab the specified cookie if it exists
-    function getCookie(cname) {
-        // REF: http://www.w3schools.com/js/js_cookies.asp
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0; i<ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1);
-            if (c.indexOf(name) === 0) return c.substring(name.length,c.length);
-        }
-        return "";
-    }
-
-    // This will redirect the user the specified url (in a new window if specified)
-    function redirect(url, newWindow) {
-        if (newWindow) {
-            window.open(url);
-        } else {
-            window.location = url;
-        }
-    }
+dlog("F5 UI Enhancements for APM loading", 1);
 
 // ***********************************
 // ***** SECTION: Custom CSS *********
 // ***********************************
 
-    // This is the style we'll be using for the NetworkMap links created by the function above (addNetworkMapLink)
-    $("<style type='text/css'> \
-         .tmLink { \
-            text-decoration:none; \
-            padding: 1px 20px 1px 5px; \
-            background: rgba(255, 255, 255, .5) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%; \
-            border: 1px solid #e6e6e6; \
-            border-left: 5px solid #e6e6e6; \
-            color: #666 !important; \
-        } \
-        .tmLink:hover { \
-            text-decoration:none !important; \
-            background-color: rgba(149, 163, 178, .1); \
-            border-left: solid 5px rgba(255, 204, 0, 1); \
-        } \
-        .noExt { \
-            background-image: none; \
-            padding-right: 5px; \
-        } \
-      </style>").appendTo("head");
-
-
+// This is the style we'll be using for the NetworkMap links created by the function above (addNetworkMapLink)
+$("<style type='text/css'> \
+     .tmLink { \
+        text-decoration:none; \
+        padding: 1px 20px 1px 5px; \
+        background: rgba(255, 255, 255, .5) url(/xui/framework/images/icon_jump_menu.png) no-repeat 100% 50%; \
+        border: 1px solid #e6e6e6; \
+        border-left: 5px solid #e6e6e6; \
+        color: #666 !important; \
+    } \
+    .tmLink:hover { \
+        text-decoration:none !important; \
+        background-color: rgba(149, 163, 178, .1); \
+        border-left: solid 5px rgba(255, 204, 0, 1); \
+    } \
+    .noExt { \
+        background-image: none; \
+        padding-right: 5px; \
+    } \
+  </style>").appendTo("head");
 
 
 // When debugging this script, it's nice to know what the current URL is that we're working with
@@ -139,7 +82,7 @@ dlog("Location: " + window.location.href, 3);
 
 // Access Profile List
 if (checkLocation("/tmui/Control/jspmap/tmui/accessctrl/profiles/list.jsp") || checkLocation("/tmui/Control/form?__handler=/tmui/accessctrl/profiles/list")) {
-    console.log("Access Policy | List ");
+    dlog("Access Policy | List ");
 
     // Convert the Status Flag icon to a link that will apply only that Access Policy
     var rows = $("table#list_table tbody tr");

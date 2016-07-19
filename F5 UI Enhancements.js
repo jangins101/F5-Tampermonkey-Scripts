@@ -1,40 +1,6 @@
-// ==UserScript==
-// @name F5 UI Enhancements
-// @version 1.0
-// @homepage https://github.com/jangins101/F5-Tampermonkey-Scripts/blob/master/F5%20UI%20Enhancements.js
-// @description Wrapper for other included TamperMonkey scripts related to F5 (LTM & APM)
-// @updateURL https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements.js
-// @downloadURL https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements.js
-// @match https://*/tmui/Control/*
-// @match https://*/sam/admin/reports/*
-// @run-at document-end
-// @require http://code.jquery.com/jquery-latest.js
-// @require https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.js
-// @require https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20for%20LTM.js
-// @require https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20for%20APM.js
-// @resource jqCtxMenu https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.css
-// @grant GM_addStyle
-// @grant GM_getResourceText
-// ==/UserScript==
-
-/* 
-    **************************************************
-    ***** Description ********************************
-    **************************************************
-
-    This script is designed to act as a wrapper for other TamperMonkey scripts that will be used for different purposes
-    
-    In this version, it will include a script for LTM and a script for APM. This is in order to separate the code a little bit for better code manageability.
-    
-    
-    **************************************************
-    ***** Version History Notes **********************
-    **************************************************
-
-    Version     Notes
-    1.0         Initial version - Include the APM and LTM scripts
-
-*/
+//***** Description *****//
+//    This script will house the shared methods and variables within other Tampermonkey scripts, so we don't have to duplicate effort in every new scripts. It will help with the 'modularization' of these scripts.
+//*****//
 
 
 // Turns on logging for the script (useful for debugging issues)
@@ -44,10 +10,8 @@
 //  3 - Debug
 var DebugLevel = 3;
 
-
-//Make sure that the tampermonkey jQuery does not tamper with F5's scripts
+// Make sure that the tampermonkey jQuery does not tamper with F5's scripts
 this.$ = this.jQuery = jQuery.noConflict(true);
-
 
 // ***********************************
 // ***** SECTION: Helper Functions ***

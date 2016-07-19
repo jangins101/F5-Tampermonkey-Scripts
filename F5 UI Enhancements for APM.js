@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 UI Enhancements for APM
-// @version 1.0
+// @version 1.01
 // @homepage https://github.com/jangins101/F5-Tampermonkey-Scripts/blob/master/F5%20UI%20Enhancements%20for%20APM.js
 // @description Modifies the Manage Session list to include a link so you can open session variables from there instead of going thruogh the Reports section
 // @updateURL https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20for%20APM.js
@@ -8,6 +8,7 @@
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
 // @run-at document-end
+// @require https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20Shared.js
 // @require http://code.jquery.com/jquery-latest.js
 // @grant GM_addStyle
 // @grant GM_getResourceText
@@ -43,15 +44,10 @@
 
 */
 
+// Override the DebugLevel that was set in the required shared script
+//DebugLevel = 3;
 
-// Turns on logging for the script (useful for debugging issues)
-//  0 - Off
-//  1 - Notice
-//  2 - Informational
-//  3 - Debug
-var DebugLevel = 3;
-
-
+/*
 //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
 this.$ = this.jQuery = jQuery.noConflict(true);
 
@@ -100,6 +96,8 @@ function redirect(url, newWindow) {
         window.location = url;
     }
 }
+
+*/
 
 // ***********************************
 // ***** SECTION: Custom CSS *********

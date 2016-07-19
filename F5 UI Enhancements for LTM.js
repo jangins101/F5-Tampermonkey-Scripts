@@ -8,9 +8,9 @@
 // @match https://*/tmui/Control/*
 // @match https://*/sam/admin/reports/*
 // @run-at document-end
-// @require https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20Shared.js
 // @require http://code.jquery.com/jquery-latest.js
 // @require https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.js
+// @require https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20Shared.js
 // @resource jqCtxMenu https://github.com/jangins101/jquery-simple-context-menu/raw/master/jquery.contextmenu.css
 // @grant GM_addStyle
 // @grant GM_getResourceText

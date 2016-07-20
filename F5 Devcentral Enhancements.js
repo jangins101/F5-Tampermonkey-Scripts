@@ -8,6 +8,7 @@
 // @match https://devcentral.f5.com/users/*
 // @run-at document-end
 // @require http://code.jquery.com/jquery-latest.js
+// @require https://raw.githubusercontent.com/jangins101/F5-Tampermonkey-Scripts/master/F5%20UI%20Enhancements%20Shared.js
 // ==/UserScript==
 
 /*

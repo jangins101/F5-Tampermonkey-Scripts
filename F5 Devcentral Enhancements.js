@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 Devcentral Enhancements
-// @version 1.0
+// @version 1.02
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20Devcentral%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20Devcentral%20Enhancements.js

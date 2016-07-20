@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 Devcentral Enhancements
-// @version 1.01
+// @version 1.0
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20Devcentral%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20Devcentral%20Enhancements.js
@@ -43,21 +43,6 @@ var DebugLevel = 3;
 this.$ = this.jQuery = jQuery.noConflict(true);
 
 
-// ***********************************
-// ***** SECTION: Helper Functions ***
-// ***********************************
-
-// If the IsDebug setting not empty/undefined/false, then we'll log messages to the console
-function dlog(o, minLevel) {
-    if (DebugLevel && (!minLevel || (minLevel >= DebugLevel) )) { console.log(o); }
-}
-
-// Most functionality is specific to a certain page, so this function is used to check the current
-//  page against a specific URL
-function checkLocation(str) {
-    return (window.location.href.indexOf(str) >= 0);
-}
-
 dlog("Location: " + window.location.href);
 if (checkLocation("https://devcentral.f5.com/users") && checkLocation("?view=notifications")){
     // Override the CSS to make the page look better
@@ -77,7 +62,7 @@ if (checkLocation("https://devcentral.f5.com/users") && checkLocation("?view=not
         var aLoadMore = $('a:contains("Load More"):visible', pDiv);          // Get the load more button for the notifications section
         var nCount = parseInt($($("strong", pEl)[1]).text());                // Determine how many pages we'll need
         for (var i=0; i<(Math.floor(nCount/10)); i++) { aLoadMore.click(); } // Click the Load More button to load 10 more items
-        dLog($('a:contains("Dismiss").currentURL', pDiv));//.click();        // Dismiss all the notification;
+        dlog($('a:contains("Dismiss").currentURL', pDiv));//.click();        // Dismiss all the notification;
     });
     aEl.appendTo(pEl);
 }

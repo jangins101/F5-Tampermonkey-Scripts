@@ -58,11 +58,17 @@ if (checkLocation("https://devcentral.f5.com/users") && checkLocation("?view=not
     // Build the link and action to dismiss all
     var aEl = $("<a href='#' id='dismissAll' title='Dismiss All' class='btn btn-primary' style='float:left'>Dismiss All</a>");
     aEl.click(function() {
-        debugger;
-        var aLoadMore = $('a:contains("Load More"):visible', pDiv);          // Get the load more button for the notifications section
-        var nCount = parseInt($($("strong", pEl)[1]).text());                // Determine how many pages we'll need
-        for (var i=0; i<(Math.floor(nCount/10)); i++) { aLoadMore.click(); } // Click the Load More button to load 10 more items
-        dlog($('a:contains("Dismiss").currentURL', pDiv));//.click();        // Dismiss all the notification;
+        //debugger;
+        var aLoadMore = $('a:contains("Load More"):visible', pDiv);                 // Get the load more button for the notifications section
+        if (aLoadMore.length > 0) {
+            var aEl = aLoadMore[0];
+            var nCount = parseInt($($("strong", pEl)[1]).text());                   // Determine how many pages we'll need
+            for (var i=0; i<(Math.floor(nCount/10)); i++) { aEl.click(); } // Click the Load More button to load 10 more items
+        }
+        window.setTimeout(function() {
+            debugger;
+            $('.notificationControls a:contains("Dismiss")', pDiv).each(function(idx,val){val.click()});
+        },1000);
     });
     aEl.appendTo(pEl);
 }

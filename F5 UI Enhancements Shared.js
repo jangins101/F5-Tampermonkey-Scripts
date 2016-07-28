@@ -1,6 +1,10 @@
-//***** Description *****//
-//    This script will house the shared methods and variables within other Tampermonkey scripts, so we don't have to duplicate effort in every new scripts. It will help with the 'modularization' of these scripts.
-//*****//
+/*  Description 
+
+This script will house the shared methods and variables within other Tampermonkey scripts, so we don't have to duplicate effort in every new scripts. It will help with the 'modularization' of these scripts.
+
+Disclaimer: All scripts are provided AS IS without warranty of any kind. I dislaim any/all liability from the use of this script.
+
+*/
 
 
 // Turns on logging for the script (useful for debugging issues)

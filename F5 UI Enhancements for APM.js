@@ -42,6 +42,7 @@
     Version     Notes
     1.0         Initial version - Pulled out of the other script I built
 
+    Disclaimer: All scripts are provided AS IS without warranty of any kind. I dislaim any/all liability from the use of this script.
 */
 
 // Override the DebugLevel that was set in the required shared script

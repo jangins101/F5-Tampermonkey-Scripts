@@ -50,6 +50,7 @@ GM_addStyle(jqCtxMenuSrc);
     1.2         Added network map link for nodes using a Monitor instance
     1.3         Removed APM stuff because I moved it to a separate script
  
+    Disclaimer: All scripts are provided AS IS without warranty of any kind. I dislaim any/all liability from the use of this script.
 */
  
  

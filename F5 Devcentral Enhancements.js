@@ -29,6 +29,8 @@
 
     Version     Notes
     1.0         Initial version (including Dismiss All button and padding override)
+    
+    Disclaimer: All scripts are provided AS IS without warranty of any kind. I dislaim any/all liability from the use of this script.
 */
 
 

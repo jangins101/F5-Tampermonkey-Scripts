@@ -122,6 +122,12 @@ GM_addStyle(jqCtxMenuSrc);
         var theadTds = $("thead .columnhead td", table);
         $("<td>Show Network Map</td>").insertAfter(theadTds[col]);
         
+        // Increment the Header TD with colspan
+        var tdColspan = $("tr.tablehead td[colspan]", table);
+        if (tdColspan.attr("colspan") % 1 === 0){
+            tdColspan.attr("colspan", (parseInt(tdColspan.attr("colspan"))+1));
+        }
+        
         // Add the row columns
         var tbodyTds = $("tbody tr", table);
         tbodyTds.each(function(idx, el) {
@@ -216,7 +222,7 @@ dlog("Location: " + window.location.href, 3);
     // Virtual Servers List
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/list.jsp")) {
         dlog("Virtual Servers | List");
-        //addNetworkMapLink();        
+        addNetworkMapLink();        
     }
  
     // Selected/Available options | Add double click ability for selection/removal
@@ -262,8 +268,7 @@ dlog("Location: " + window.location.href, 3);
                 // Add the link to the DOM next to the select box
                 var eParent = el.parent();
                 var aId = 'link_' + o.id;
-                //var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;" onclick="" title="" onmouseover="" onmouseup="" onmousedown="" target="_blank" class="" href="" onmouseout="">Open ' + o.name + ' Configuration</a>');
-                var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;">Open ' + o.name + ' Configuration</a>');
+                var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;" target="_blank">Open ' + o.name + ' Configuration</a>');
                 eParent.append(a);
  
                 // Add a change event to the selectbox so we will only show the link if a value is selected
@@ -446,7 +451,7 @@ dlog("Location: " + window.location.href, 3);
         addNetworkMapLink();
     }
  
-    // Poopl properties
+    // Pool properties
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
         dlog("Pools | Properties");
         

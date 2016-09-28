@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 Devcentral Enhancements
-// @version 1.03
+// @version 1.04
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20Devcentral%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20Devcentral%20Enhancements.js
@@ -29,8 +29,6 @@
 
     Version     Notes
     1.0         Initial version (including Dismiss All button and padding override)
-    
-    Disclaimer: All scripts are provided AS IS without warranty of any kind. I dislaim any/all liability from the use of this script.
 */
 
 
@@ -45,8 +43,21 @@ var DebugLevel = 3;
 //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
 this.$ = this.jQuery = jQuery.noConflict(true);
 
-
 dlog("Location: " + window.location.href);
+
+// Force question subscribe on add comment
+var btnComments = $(".js-comment-add");
+if (btnComments.length > 0) {
+    if (DebugLevel > 2) { console.log("Adding question subscribe event to comment buttons"); }
+    btnComments.click(function(e) {
+        var cb = $("#question-subscribe");
+        if (!(cb.prop("checked"))) {
+            cb.click();
+        }
+    });
+}
+
+// Add Load More and Dismiss All buttons to the notifications page
 if (checkLocation("https://devcentral.f5.com/users") && checkLocation("?view=notifications")){
     // Override the CSS to make the page look better
     $("<style type='text/css'>.DnnModule-Messaging-Notifications .smListings .message { white-space: normal !important; }</style>").appendTo("head");

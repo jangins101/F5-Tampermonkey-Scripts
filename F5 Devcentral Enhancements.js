@@ -49,16 +49,35 @@ dlog("Location: " + window.location.href);
 
 
 // Force question subscribe on add comment
-var btnComments = $(".js-comment-add");
-if (btnComments.length > 0) {
-    if (DebugLevel > 2) { console.log("Adding question subscribe event to comment buttons"); }
-    btnComments.click(function(e) {
-        var cb = $("#question-subscribe");
-        if (!(cb.prop("checked"))) {
-            cb.click();
-        }
-    });
+if (checkLocation("https://devcentral.f5.com/questions")) {
+    var btnComments = $(".js-comment-add");
+    if (btnComments.length > 0) {
+        if (DebugLevel > 2) { console.log("Adding question subscribe event to comment buttons"); }
+        btnComments.click(function(e) {
+            var cb = $("#question-subscribe");
+            if (!(cb.prop("checked"))) {
+                cb.click();
+            }
+        });
+    }
 }
+
+
+// Force codeshare subscribe on add comment
+if (checkLocation("https://devcentral.f5.com/codeshare")) {
+    var btnComments = $(".js-comment-add");
+    if (btnComments.length > 0) {
+        if (DebugLevel > 2) { console.log("Adding codeshare subscribe event to comment buttons"); }
+        btnComments.click(function(e) {
+            var cb = $("#snippet-subscribe");
+            if (!(cb.prop("checked"))) {
+                cb.click();
+            }
+        });
+    }
+}
+
+
 
 // Add Load More and Dismiss All buttons to the notifications page
 if (checkLocation("https://devcentral.f5.com/users") && checkLocation("?view=notifications")){

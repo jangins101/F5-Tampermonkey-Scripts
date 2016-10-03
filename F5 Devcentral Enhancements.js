@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 Devcentral Enhancements
-// @version 1.04
+// @version 1.05
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20Devcentral%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20Devcentral%20Enhancements.js
@@ -29,6 +29,7 @@
 
     Version     Notes
     1.0         Initial version (including Dismiss All button and padding override)
+    1.05        Added auto-subscribe to CodeShare and Questions when adding a comment
     
     Disclaimer: All scripts are provided AS IS without warranty of any kind. I dislaim any/all liability from the use of this script.
 */

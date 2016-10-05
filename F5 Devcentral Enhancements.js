@@ -42,11 +42,6 @@
 //  3 - Debug
 var DebugLevel = 3;
 
-// If the IsDebug setting not empty/undefined/false, then we'll log messages to the console
-function dlog(o, minLevel) {
-    if (DebugLevel && (!minLevel || (minLevel >= DebugLevel) )) { console.log(o); } 
-}
-
 //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
 this.$ = this.jQuery = jQuery.noConflict(true);
 

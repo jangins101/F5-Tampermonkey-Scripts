@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 Devcentral Enhancements
-// @version 1.05
+// @version 1.06
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20Devcentral%20Enhancements.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20Devcentral%20Enhancements.js
@@ -42,6 +42,10 @@
 //  3 - Debug
 var DebugLevel = 3;
 
+// If the IsDebug setting not empty/undefined/false, then we'll log messages to the console
+function dlog(o, minLevel) {
+    if (DebugLevel && (!minLevel || (minLevel >= DebugLevel) )) { console.log(o); } 
+}
 
 //Make sure that the tampermonkey jQuery does not tamper with F5's scripts
 this.$ = this.jQuery = jQuery.noConflict(true);

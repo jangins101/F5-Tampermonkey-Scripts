@@ -274,7 +274,7 @@ dlog("Location: " + window.location.href, 3);
                 // Add the link to the DOM next to the select box
                 var eParent = el.parent();
                 var aId = 'link_' + o.id;
-                var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;" target="_blank">Open ' + o.name + ' Configuration</a>');
+                var a = $('<a id="' + aId + '" class="tmLink" target="_blank" data-link="' + o.link + '" style="visible:hidden;" target="_blank">Open ' + o.name + ' Configuration</a>');
                 eParent.append(a);
  
                 // Add a change event to the selectbox so we will only show the link if a value is selected

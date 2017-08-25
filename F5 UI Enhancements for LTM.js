@@ -232,7 +232,7 @@ dlog("Location: " + window.location.href, 3);
     }
  
     // Selected/Available options | Add double click ability for selection/removal
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/properties.jsp")) {
+    if (checkLocation("/tmui/locallb/virtual_server/properties") || checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/properties.jsp")) {
         dlog("Virtual Servers | Properties");
         
         //  SSL Profile (client)
@@ -256,11 +256,11 @@ dlog("Location: " + window.location.href, 3);
     }
  
     // Load Balancing selections
-    // This script will modify the VS resources page to add a new link for the default pool and persistence settings which will open a new window on the object's configuration page
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/resources.jsp")) {
+    // This script will modify the VS resources page to add a new link for the default pool and 
+    //      persistence settings which will open a new window on the object's configuration page
+    if (checkLocation("/tmui/locallb/virtual_server/resources") || checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/resources.jsp")) {
         dlog("Virtual Servers | Resources");
- 
-        
+
         // We'er going to add links for default values on the following things
         var selects = [
             {id: "default_pool", name: "Pool", link: "pool" },
@@ -395,7 +395,7 @@ dlog("Location: " + window.location.href, 3);
     // iRule & Policy selection pages
     if (checkLocation("/tmui/Control/form?__handler=/tmui/locallb/virtual_server/resources")) {
         dlog("Virtual Servers | Resources | iRule & Policy Selection");
- 
+
         // Assigned iRules
         if($("#assigned_rules").length && $("#rule_references").length){
             // Sync widths of the select boxes to the max value

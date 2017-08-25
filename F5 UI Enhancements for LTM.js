@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 UI Enhancements for LTM
-// @version 1.3
+// @version 1.3.1
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20UI%20Enhancements%20for%20LTM.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker 
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20UI%20Enhancements%20for%20LTM.js
@@ -49,6 +49,7 @@ GM_addStyle(jqCtxMenuSrc);
     1.1         Added context menu for SSL profiles on virtual server properties page
     1.2         Added network map link for nodes using a Monitor instance
     1.3         Removed APM stuff because I moved it to a separate script
+    1.3.1       Cosmetic fixes when showing network map
  
     
     ToDo:
@@ -273,7 +274,7 @@ dlog("Location: " + window.location.href, 3);
                 // Add the link to the DOM next to the select box
                 var eParent = el.parent();
                 var aId = 'link_' + o.id;
-                var a = $('<a id="' + aId + '" class="tmLink" data-link="' + o.link + '" style="visible:hidden;" target="_blank">Open ' + o.name + ' Configuration</a>');
+                var a = $('<a id="' + aId + '" class="tmLink" target="_blank" data-link="' + o.link + '" style="visible:hidden;" target="_blank">Open Configuration</a>');
                 eParent.append(a);
  
                 // Add a change event to the selectbox so we will only show the link if a value is selected

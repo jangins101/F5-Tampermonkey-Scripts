@@ -120,9 +120,9 @@ GM_addStyle(jqCtxMenuSrc);
 
     // This will add a link to every record in the "list_table" that opens the Network Map page in a new window
     // It will make use of the dymanic CSS addition below
-    function addNetworkMapLink(col, nameFcn) {
-        col = (col >= 0 ? col : 2);
-        var table = $("#list_table");
+    function addNetworkMapLink(col, nameFcn, tableName) {
+        col = ((col != null && col >= 0) ? col : 2);
+        var table = $("#" + (tableName || "list_table"));
         
         // Add the header column
         var theadTds = $("thead .columnhead td", table);
@@ -458,7 +458,7 @@ dlog("Location: " + window.location.href, 3);
     }
  
     // Pool properties
-    if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
+    if (checkLocation("/tmui/locallb/pool/properties") || checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/properties.jsp")) {
         dlog("Pools | Properties");
         
         // Add doubleclick for monitor select boxes
@@ -472,10 +472,12 @@ dlog("Location: " + window.location.href, 3);
         // Add doubleclick for monitor select boxes
         addMonitorListDoubleClick();
     }
+
     // Pool Members
     if (checkLocation("/tmui/Control/jspmap/tmui/locallb/pool/resources.jsp?name=")) {
-        dlog("Pools | Members");        
-        addNetworkMapLink();
+        dlog("Pools | Members");
+        // TODO: Get link to use just hostname
+        addNetworkMapLink(null, null, "member_table");
     }
  
 

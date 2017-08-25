@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name F5 UI Enhancements for LTM
-// @version 1.3.1
+// @version 1.3.2
 // @homepage https://github.com/jangins101/F5/blob/master/F5%20UI%20Enhancements%20for%20LTM.js
 // @description Adds a lot of useful features to the GUI in order to make access to different configuration items quicker 
 // @updateURL https://github.com/jangins101/F5/raw/master/F5%20UI%20Enhancements%20for%20LTM.js

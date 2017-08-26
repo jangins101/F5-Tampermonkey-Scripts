@@ -137,7 +137,7 @@ dlog("Location: " + window.location.href, 3);
 // ***********************************
 
 // Access Profile List
-if (checkLocation("/tmui/Control/jspmap/tmui/accessctrl/profiles/list.jsp") || checkLocation("/tmui/Control/form?__handler=/tmui/accessctrl/profiles/list")) {
+if (checkLocation("/tmui/accessctrl/profiles/list") || checkLocation("/tmui/Control/jspmap/tmui/accessctrl/profiles/list.jsp") || checkLocation("/tmui/Control/form?__handler=/tmui/accessctrl/profiles/list")) {
     console.log("Access Policy | List ");
 
     // Convert the Status Flag icon to a link that will apply only that Access Policy

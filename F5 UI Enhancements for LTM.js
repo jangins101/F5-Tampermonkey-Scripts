@@ -255,10 +255,11 @@ dlog("Location: " + window.location.href, 3);
         syncWidths("selected_vlans", "available_vlans");
     }
  
-    // Load Balancing selections
-    // This script will modify the VS resources page to add a new link for the default pool and 
-    //      persistence settings which will open a new window on the object's configuration page
+    // Virtual Server Resources Tab
     if (checkLocation("/tmui/locallb/virtual_server/resources") || checkLocation("/tmui/Control/jspmap/tmui/locallb/virtual_server/resources.jsp")) {
+        // Load Balancing selections
+        // This script will modify the VS resources page to add a new link for the default pool and 
+        //      persistence settings which will open a new window on the object's configuration page
         dlog("Virtual Servers | Resources");
 
         // We'er going to add links for default values on the following things
@@ -390,10 +391,9 @@ dlog("Location: " + window.location.href, 3);
                 replacePolicyName(rObj.response, obj);
             }
         });
-    }
- 
-    // iRule & Policy selection pages
-    if (checkLocation("/tmui/Control/form?__handler=/tmui/locallb/virtual_server/resources")) {
+
+        
+        // iRule & Policy selection pages
         dlog("Virtual Servers | Resources | iRule & Policy Selection");
 
         // Assigned iRules

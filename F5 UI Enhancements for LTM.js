@@ -50,6 +50,7 @@ GM_addStyle(jqCtxMenuSrc);
     1.2         Added network map link for nodes using a Monitor instance
     1.3         Removed APM stuff because I moved it to a separate script
     1.3.1       Cosmetic fixes when showing network map
+    1.3.2       Fix bugs that caused enhancements to not work after saving changes
  
     
     ToDo:
